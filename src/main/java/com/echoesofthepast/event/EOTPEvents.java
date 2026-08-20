@@ -6,5 +6,7 @@ public final class EOTPEvents {
 
     public static void register() {
         CultivationEvents.register();
+        MovementEvents.register();
+        CombatEvents.register();
     }
 }

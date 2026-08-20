@@ -4,6 +4,9 @@ import com.echoesofthepast.EchoesOfThePast;
 import com.echoesofthepast.alchemy.PillKind;
 import com.echoesofthepast.aura.IncenseKind;
 import com.echoesofthepast.item.CarvedSealItem;
+import com.echoesofthepast.item.CloudstepShoesItem;
+import com.echoesofthepast.item.EOTPArmorMaterials;
+import com.echoesofthepast.item.FlyingSwordItem;
 import com.echoesofthepast.item.IncenseStickItem;
 import com.echoesofthepast.item.PillItem;
 import com.echoesofthepast.item.SpiritBrushItem;
@@ -15,6 +18,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ToolMaterial;
+import net.minecraft.world.item.equipment.ArmorMaterial;
+import net.minecraft.world.item.equipment.ArmorType;
 import net.minecraftforge.eventbus.api.bus.BusGroup;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -81,6 +87,28 @@ public final class EOTPItems {
 
     public static RegistryObject<Item> incense(IncenseKind kind) {
         return INCENSE.get(kind);
+    }
+
+    // ----------------------------------------------------------------------- artifacts and armour
+
+    public static final RegistryObject<Item> FLYING_SWORD = register("flying_sword",
+        properties -> new FlyingSwordItem(properties.stacksTo(1).sword(ToolMaterial.DIAMOND, 3.0F, -2.4F)));
+
+    public static final RegistryObject<Item> CLOUDSTEP_SHOES = register("cloudstep_shoes",
+        properties -> new CloudstepShoesItem(EOTPArmorMaterials.JADE_SILK, properties.stacksTo(1), 2));
+
+    public static final RegistryObject<Item> SWORD_CULTIVATOR_CROWN = armour("sword_cultivator_crown", EOTPArmorMaterials.JADE_SILK, ArmorType.HELMET);
+    public static final RegistryObject<Item> SWORD_CULTIVATOR_ROBE = armour("sword_cultivator_robe", EOTPArmorMaterials.JADE_SILK, ArmorType.CHESTPLATE);
+    public static final RegistryObject<Item> SWORD_CULTIVATOR_SKIRT = armour("sword_cultivator_skirt", EOTPArmorMaterials.JADE_SILK, ArmorType.LEGGINGS);
+    public static final RegistryObject<Item> SWORD_CULTIVATOR_BOOTS = armour("sword_cultivator_boots", EOTPArmorMaterials.JADE_SILK, ArmorType.BOOTS);
+
+    public static final RegistryObject<Item> ALCHEMIST_HOOD = armour("alchemist_hood", EOTPArmorMaterials.ROBE, ArmorType.HELMET);
+    public static final RegistryObject<Item> ALCHEMIST_ROBE = armour("alchemist_robe", EOTPArmorMaterials.ROBE, ArmorType.CHESTPLATE);
+    public static final RegistryObject<Item> ALCHEMIST_TROUSERS = armour("alchemist_trousers", EOTPArmorMaterials.ROBE, ArmorType.LEGGINGS);
+    public static final RegistryObject<Item> ALCHEMIST_SANDALS = armour("alchemist_sandals", EOTPArmorMaterials.ROBE, ArmorType.BOOTS);
+
+    private static RegistryObject<Item> armour(String name, ArmorMaterial material, ArmorType type) {
+        return register(name, properties -> new Item(properties.humanoidArmor(material, type)));
     }
 
     // ------------------------------------------------------------------------------------- pills

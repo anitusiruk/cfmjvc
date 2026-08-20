@@ -1,10 +1,13 @@
 package com.echoesofthepast.event;
 
+import com.echoesofthepast.cultivation.BreakthroughRitual;
 import com.echoesofthepast.cultivation.Cultivation;
 import com.echoesofthepast.cultivation.CultivationStore;
 import com.echoesofthepast.cultivation.Cultivator;
 import com.echoesofthepast.cultivation.Meridian;
 import com.echoesofthepast.cultivation.Realm;
+import com.echoesofthepast.cultivation.SpiritProjection;
+import com.echoesofthepast.cultivation.Tribulation;
 import com.echoesofthepast.qi.PhaseBlend;
 import com.echoesofthepast.registry.EOTPMobEffects;
 import com.echoesofthepast.util.Tell;
@@ -44,6 +47,19 @@ public final class CultivationEvents {
 
         long time = player.level().getGameTime();
         BlockPos pos = player.blockPosition();
+
+        // Things that have to watch every tick: footwork and lightning.
+        MovementEvents.tick(player, event.side());
+        Tribulation.tick(player);
+
+        if (time % 20L == 0L) {
+            SpiritProjection.tick(player);
+            if (cultivator.readyToBreakThrough()
+                && player.getDeltaMovement().horizontalDistanceSqr() < 1.0E-4
+                && !SpiritProjection.isProjecting(player)) {
+                BreakthroughRitual.tick(player, cultivator);
+            }
+        }
 
         if (time % 20L == 0L) {
             float ambient = DragonVeins.ambientQi(player.level(), pos);
