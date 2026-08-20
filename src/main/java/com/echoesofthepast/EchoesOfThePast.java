@@ -4,6 +4,7 @@ import com.echoesofthepast.registry.EOTPBlockEntities;
 import com.echoesofthepast.registry.EOTPBlocks;
 import com.echoesofthepast.registry.EOTPComponents;
 import com.echoesofthepast.registry.EOTPEntities;
+import com.echoesofthepast.registry.EOTPFluids;
 import com.echoesofthepast.registry.EOTPItems;
 import com.echoesofthepast.registry.EOTPMobEffects;
 import com.echoesofthepast.registry.EOTPTabs;
@@ -24,6 +25,7 @@ public final class EchoesOfThePast {
         BusGroup modBus = context.getModBusGroup();
 
         EOTPBlocks.register(modBus);
+        EOTPFluids.register(modBus);
         EOTPItems.register(modBus);
         EOTPBlockEntities.register(modBus);
         EOTPEntities.register(modBus);

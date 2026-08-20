@@ -6,6 +6,10 @@ import com.echoesofthepast.block.craft.HerbDryingRackBlockEntity;
 import com.echoesofthepast.block.craft.IncenseCenserBlockEntity;
 import com.echoesofthepast.block.craft.InkstoneBlockEntity;
 import com.echoesofthepast.block.craft.SealCarvingTableBlockEntity;
+import com.echoesofthepast.block.echo.AncestralTabletBlockEntity;
+import com.echoesofthepast.block.plant.LingzhiFungusBlockEntity;
+import com.echoesofthepast.block.plant.MoonLotusBlockEntity;
+import com.echoesofthepast.block.qi.SpiritStoneBlockEntity;
 import com.echoesofthepast.block.formation.FootworkSealBlockEntity;
 import com.echoesofthepast.block.formation.FormationCoreBlockEntity;
 import com.echoesofthepast.block.qi.BaguaDistributorBlockEntity;
@@ -101,6 +105,25 @@ public final class EOTPBlockEntities {
     public static final RegistryObject<BlockEntityType<HerbDryingRackBlockEntity>> HERB_DRYING_RACK =
         BLOCK_ENTITIES.register("herb_drying_rack", () -> new BlockEntityType<>(
             HerbDryingRackBlockEntity::new, Set.of(EOTPBlocks.HERB_DRYING_RACK.get())));
+
+    public static final RegistryObject<BlockEntityType<AncestralTabletBlockEntity>> ANCESTRAL_TABLET =
+        BLOCK_ENTITIES.register("ancestral_tablet", () -> new BlockEntityType<>(
+            AncestralTabletBlockEntity::new, Set.of(EOTPBlocks.ANCESTRAL_TABLET.get())));
+
+    public static final RegistryObject<BlockEntityType<MoonLotusBlockEntity>> MOON_LOTUS =
+        BLOCK_ENTITIES.register("moon_lotus", () -> new BlockEntityType<>(
+            MoonLotusBlockEntity::new, Set.of(EOTPBlocks.MOON_LOTUS.get())));
+
+    public static final RegistryObject<BlockEntityType<LingzhiFungusBlockEntity>> LINGZHI_FUNGUS =
+        BLOCK_ENTITIES.register("lingzhi_spirit_fungus", () -> new BlockEntityType<>(
+            LingzhiFungusBlockEntity::new, Set.of(EOTPBlocks.LINGZHI_SPIRIT_FUNGUS.get())));
+
+    public static final RegistryObject<BlockEntityType<SpiritStoneBlockEntity>> SPIRIT_STONE_BLOCK =
+        BLOCK_ENTITIES.register("spirit_stone_block", () -> new BlockEntityType<>(
+            SpiritStoneBlockEntity::new, Set.of(
+                EOTPBlocks.LOW_SPIRIT_STONE_BLOCK.get(),
+                EOTPBlocks.MIDDLE_SPIRIT_STONE_BLOCK.get(),
+                EOTPBlocks.HIGH_SPIRIT_STONE_BLOCK.get())));
 
     public static void register(BusGroup modBus) {
         BLOCK_ENTITIES.register(modBus);

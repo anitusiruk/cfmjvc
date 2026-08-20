@@ -3,6 +3,12 @@ package com.echoesofthepast.registry;
 import com.echoesofthepast.EchoesOfThePast;
 import com.echoesofthepast.block.alchemy.DingCauldronBlock;
 import com.echoesofthepast.block.craft.HerbDryingRackBlock;
+import com.echoesofthepast.block.echo.AncestralTabletBlock;
+import com.echoesofthepast.block.plant.EarthrootGinsengBlock;
+import com.echoesofthepast.block.plant.LingzhiFungusBlock;
+import com.echoesofthepast.block.plant.MoonLotusBlock;
+import com.echoesofthepast.block.plant.SpiritBambooBlock;
+import com.echoesofthepast.block.qi.SpiritStoneBlock;
 import com.echoesofthepast.block.craft.IncenseCenserBlock;
 import com.echoesofthepast.block.craft.InkstoneBlock;
 import com.echoesofthepast.block.craft.SealCarvingTableBlock;
@@ -164,6 +170,67 @@ public final class EOTPBlocks {
 
     public static final RegistryObject<Block> HERB_DRYING_RACK =
         register("herb_drying_rack", HerbDryingRackBlock::new, () -> bamboo().noOcclusion());
+
+    // -------------------------------------------------------------------------------- the echoes
+
+    public static final RegistryObject<Block> ANCESTRAL_TABLET =
+        register("ancestral_tablet", AncestralTabletBlock::new,
+            () -> BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(2.0F, 4.0F)
+                .sound(SoundType.STONE).noOcclusion().requiresCorrectToolForDrops()
+                .lightLevel(state -> state.getValue(AncestralTabletBlock.AWAKENED) ? 7 : 0));
+
+    // ---------------------------------------------------------------------------- growing things
+
+    public static final RegistryObject<Block> SPIRIT_BAMBOO =
+        register("spirit_bamboo", SpiritBambooBlock::new,
+            () -> bamboo().randomTicks().noCollision().instabreak());
+
+    public static final RegistryObject<Block> HOLLOW_SPIRIT_BAMBOO =
+        register("hollow_spirit_bamboo", SpiritBambooBlock::new,
+            () -> bamboo().noCollision().instabreak());
+
+    public static final RegistryObject<Block> MOON_LOTUS =
+        register("moon_lotus", MoonLotusBlock::new,
+            () -> BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_BLUE).strength(0.2F)
+                .sound(SoundType.WET_GRASS).noOcclusion().noCollision()
+                .lightLevel(state -> state.getValue(MoonLotusBlock.OPEN) ? 6 : 0));
+
+    public static final RegistryObject<Block> EARTHROOT_GINSENG =
+        register("earthroot_ginseng", EarthrootGinsengBlock::new,
+            () -> BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).strength(0.2F)
+                .sound(SoundType.CROP).randomTicks().noOcclusion().noCollision());
+
+    public static final RegistryObject<Block> LINGZHI_SPIRIT_FUNGUS =
+        register("lingzhi_spirit_fungus", LingzhiFungusBlock::new,
+            () -> BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BROWN).strength(0.3F)
+                .sound(SoundType.FUNGUS).noOcclusion().noCollision());
+
+    // ------------------------------------------------------------------------------ spirit stone
+
+    public static final RegistryObject<Block> SPIRIT_STONE_ORE =
+        register("spirit_stone_ore", props -> new net.minecraft.world.level.block.Block(props),
+            () -> BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(3.0F, 3.0F).requiresCorrectToolForDrops());
+
+    public static final RegistryObject<Block> DEEPSLATE_SPIRIT_STONE_ORE =
+        register("deepslate_spirit_stone_ore", props -> new net.minecraft.world.level.block.Block(props),
+            () -> BlockBehaviour.Properties.of().mapColor(MapColor.DEEPSLATE).strength(4.5F, 3.0F)
+                .sound(SoundType.DEEPSLATE).requiresCorrectToolForDrops());
+
+    public static final RegistryObject<Block> LOW_SPIRIT_STONE_BLOCK = spiritStoneBlock("low_spirit_stone_block", 4);
+    public static final RegistryObject<Block> MIDDLE_SPIRIT_STONE_BLOCK = spiritStoneBlock("middle_spirit_stone_block", 8);
+    public static final RegistryObject<Block> HIGH_SPIRIT_STONE_BLOCK = spiritStoneBlock("high_spirit_stone_block", 12);
+
+    /**
+     * A stored block of spirit stone. It is a genuine reservoir, and the brightness in its
+     * blockstate falls as it is drained, so a wall of these visibly dims when the workshop is
+     * running hard.
+     */
+    private static RegistryObject<Block> spiritStoneBlock(String name, int light) {
+        return register(name, props -> new SpiritStoneBlock(props, light),
+            () -> BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_LIGHT_BLUE)
+                .strength(2.5F, 4.0F).sound(SoundType.AMETHYST).requiresCorrectToolForDrops()
+                .lightLevel(state -> state.getValue(SpiritStoneBlock.CHARGE) * light / 4));
+    }
 
     // ---------------------------------------------------------------------------------- plumbing
 

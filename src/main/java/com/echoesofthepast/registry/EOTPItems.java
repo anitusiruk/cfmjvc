@@ -4,6 +4,11 @@ import com.echoesofthepast.EchoesOfThePast;
 import com.echoesofthepast.alchemy.PillKind;
 import com.echoesofthepast.aura.IncenseKind;
 import com.echoesofthepast.item.CarvedSealItem;
+import com.echoesofthepast.item.DragonVeinCompassItem;
+import com.echoesofthepast.item.EchoMirrorItem;
+import com.echoesofthepast.item.EchoScrollItem;
+import com.echoesofthepast.item.JadeImperialSealItem;
+import com.echoesofthepast.item.PaperCraneItem;
 import com.echoesofthepast.item.CloudstepShoesItem;
 import com.echoesofthepast.item.EOTPArmorMaterials;
 import com.echoesofthepast.item.FlyingSwordItem;
@@ -17,7 +22,9 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ToolMaterial;
 import net.minecraft.world.item.equipment.ArmorMaterial;
 import net.minecraft.world.item.equipment.ArmorType;
@@ -68,11 +75,17 @@ public final class EOTPItems {
     public static final RegistryObject<Item> LINGZHI_CAP = simple("lingzhi_cap");
     public static final RegistryObject<Item> PURIFIED_LINGZHI = simple("purified_lingzhi");
     public static final RegistryObject<Item> PILL_RESIDUE = simple("pill_residue");
-    public static final RegistryObject<Item> SPIRIT_SPRING_BUCKET = simple("spirit_spring_bucket", 1);
+    public static final RegistryObject<Item> SPIRIT_SPRING_BUCKET = register("spirit_spring_bucket",
+        properties -> new BucketItem(EOTPFluids.SPIRIT_SPRING.get(), properties.craftRemainder(Items.BUCKET).stacksTo(1)));
 
     // ------------------------------------------------------------------------------------- tools
 
     public static final RegistryObject<Item> SPIRIT_BRUSH = register("spirit_brush", properties -> new SpiritBrushItem(properties.stacksTo(1)));
+    public static final RegistryObject<Item> DRAGON_VEIN_COMPASS = register("dragon_vein_compass", properties -> new DragonVeinCompassItem(properties.stacksTo(1)));
+    public static final RegistryObject<Item> ECHO_MIRROR = register("echo_mirror", properties -> new EchoMirrorItem(properties.stacksTo(1)));
+    public static final RegistryObject<Item> JADE_IMPERIAL_SEAL = register("jade_imperial_seal", properties -> new JadeImperialSealItem(properties.stacksTo(1)));
+    public static final RegistryObject<Item> ECHO_SCROLL = register("echo_scroll", properties -> new EchoScrollItem(properties.stacksTo(8)));
+    public static final RegistryObject<Item> PAPER_CRANE = register("paper_crane", properties -> new PaperCraneItem(properties.stacksTo(16)));
     public static final RegistryObject<Item> CARVED_SEAL = register("carved_seal", properties -> new CarvedSealItem(properties.stacksTo(1)));
 
     // ---------------------------------------------------------------------------------- incense

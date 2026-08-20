@@ -8,5 +8,6 @@ public final class EOTPEvents {
         CultivationEvents.register();
         MovementEvents.register();
         CombatEvents.register();
+        EchoEvents.register();
     }
 }

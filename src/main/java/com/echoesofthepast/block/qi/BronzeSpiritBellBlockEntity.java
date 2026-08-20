@@ -1,6 +1,8 @@
 package com.echoesofthepast.block.qi;
 
 import com.echoesofthepast.block.QiDeviceBlockEntity;
+import com.echoesofthepast.imprint.ImprintAction;
+import com.echoesofthepast.imprint.ImprintTarget;
 import com.echoesofthepast.qi.QiNet;
 import com.echoesofthepast.qi.QiPulse;
 import com.echoesofthepast.qi.QiPulseReceiver;
@@ -18,7 +20,7 @@ import net.minecraft.world.level.block.state.BlockState;
  * The bell keeps a small amount of Qi so that it can be rung by hand as well as by a pulse, and it
  * passes pulses on rather than swallowing them, so bells can sit in the middle of a run of thread.
  */
-public class BronzeSpiritBellBlockEntity extends QiDeviceBlockEntity implements QiPulseReceiver {
+public class BronzeSpiritBellBlockEntity extends QiDeviceBlockEntity implements QiPulseReceiver, ImprintTarget {
     /** Rings closer together than this are swallowed, so a stuck device cannot scream. */
     private static final int COOLDOWN = 6;
 
@@ -69,5 +71,12 @@ public class BronzeSpiritBellBlockEntity extends QiDeviceBlockEntity implements 
         level.playSound(null, this.worldPosition, SoundEvents.BELL_BLOCK, SoundSource.BLOCKS, 1.2F, tone.pitch());
         Resonance.emit(level, this.worldPosition, tone, strength);
         QiVisuals.ring(level, net.minecraft.world.phys.Vec3.atCenterOf(this.worldPosition), 0.7, this.storage.blend().color(), 10);
+    }
+
+    @Override
+    public boolean acceptImprint(ServerLevel level, ImprintAction action, net.minecraft.world.item.ItemStack offered) {
+        if (action != ImprintAction.STRIKE) return false;
+        this.strikeByHand();
+        return true;
     }
 }

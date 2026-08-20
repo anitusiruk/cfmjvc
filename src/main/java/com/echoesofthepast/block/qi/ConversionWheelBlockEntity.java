@@ -1,6 +1,8 @@
 package com.echoesofthepast.block.qi;
 
 import com.echoesofthepast.block.QiDeviceBlockEntity;
+import com.echoesofthepast.imprint.ImprintAction;
+import com.echoesofthepast.imprint.ImprintTarget;
 import com.echoesofthepast.qi.Phase;
 import com.echoesofthepast.qi.PhaseBlend;
 import com.echoesofthepast.qi.QiNet;
@@ -21,7 +23,7 @@ import net.minecraft.world.phys.Vec3;
  * most of what goes in, and roughens what comes out, which is exactly why turbulent Qi ends up being
  * something a workshop has to deal with rather than a number that never appears.
  */
-public class ConversionWheelBlockEntity extends QiDeviceBlockEntity {
+public class ConversionWheelBlockEntity extends QiDeviceBlockEntity implements ImprintTarget {
     private static final float FORWARD_EFFICIENCY = 0.7F;
     private static final float REVERSE_EFFICIENCY = 0.4F;
     private static final float BATCH = 8.0F;
@@ -127,5 +129,18 @@ public class ConversionWheelBlockEntity extends QiDeviceBlockEntity {
         this.source = input.read("source", Phase.CODEC).orElse(Phase.WOOD);
         this.reversed = input.getBooleanOr("reversed", false);
         this.catalystCharges = input.getIntOr("catalyst", 0);
+    }
+
+    @Override
+    public boolean acceptImprint(ServerLevel level, ImprintAction action, ItemStack offered) {
+        return switch (action) {
+            case TURN -> {
+                this.turn();
+                yield true;
+            }
+            // A tablet can keep the wheel supplied with catalyst as well as turning it.
+            case FEED -> this.acceptCatalyst(offered);
+            default -> false;
+        };
     }
 }

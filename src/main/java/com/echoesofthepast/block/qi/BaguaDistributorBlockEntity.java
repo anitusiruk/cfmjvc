@@ -1,6 +1,8 @@
 package com.echoesofthepast.block.qi;
 
 import com.echoesofthepast.block.QiDeviceBlockEntity;
+import com.echoesofthepast.imprint.ImprintAction;
+import com.echoesofthepast.imprint.ImprintTarget;
 import com.echoesofthepast.qi.Phase;
 import com.echoesofthepast.qi.QiNet;
 import com.echoesofthepast.qi.QiNode;
@@ -20,7 +22,7 @@ import org.jspecify.annotations.Nullable;
  * Divides Qi among the eight positions around it, including the corners, which is what makes a bagua
  * feel like a bagua rather than a four-way splitter.
  */
-public class BaguaDistributorBlockEntity extends QiDeviceBlockEntity {
+public class BaguaDistributorBlockEntity extends QiDeviceBlockEntity implements ImprintTarget {
     /** The eight trigram positions, in clockwise order starting from north. */
     private static final BlockPos[] RING = new BlockPos[] {
         new BlockPos(0, 0, -1),
@@ -171,5 +173,12 @@ public class BaguaDistributorBlockEntity extends QiDeviceBlockEntity {
         super.loadAdditional(input);
         this.mode = input.read("mode", BaguaMode.CODEC).orElse(BaguaMode.ALTERNATE);
         this.cursor = input.getIntOr("cursor", 0);
+    }
+
+    @Override
+    public boolean acceptImprint(ServerLevel level, ImprintAction action, net.minecraft.world.item.ItemStack offered) {
+        if (action != ImprintAction.TURN) return false;
+        this.cycleMode();
+        return true;
     }
 }
