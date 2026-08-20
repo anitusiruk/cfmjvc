@@ -1,6 +1,12 @@
 package com.echoesofthepast.registry;
 
 import com.echoesofthepast.EchoesOfThePast;
+import com.echoesofthepast.alchemy.PillKind;
+import com.echoesofthepast.aura.IncenseKind;
+import com.echoesofthepast.item.CarvedSealItem;
+import com.echoesofthepast.item.IncenseStickItem;
+import com.echoesofthepast.item.PillItem;
+import com.echoesofthepast.item.SpiritBrushItem;
 import com.echoesofthepast.item.TalismanItem;
 import com.echoesofthepast.talisman.TalismanType;
 import java.util.ArrayList;
@@ -48,6 +54,48 @@ public final class EOTPItems {
     public static final RegistryObject<Item> TALISMAN_PAPER = simple("talisman_paper");
     public static final RegistryObject<Item> HOLLOW_BAMBOO = simple("hollow_bamboo");
     public static final RegistryObject<Item> SPIRIT_BAMBOO_SHOOT = simple("spirit_bamboo_shoot");
+
+    // -------------------------------------------------------------------------- plants and spoils
+
+    public static final RegistryObject<Item> MOON_LOTUS_PETAL = simple("moon_lotus_petal");
+    public static final RegistryObject<Item> GINSENG_ROOT = simple("ginseng_root");
+    public static final RegistryObject<Item> LINGZHI_CAP = simple("lingzhi_cap");
+    public static final RegistryObject<Item> PURIFIED_LINGZHI = simple("purified_lingzhi");
+    public static final RegistryObject<Item> PILL_RESIDUE = simple("pill_residue");
+    public static final RegistryObject<Item> SPIRIT_SPRING_BUCKET = simple("spirit_spring_bucket", 1);
+
+    // ------------------------------------------------------------------------------------- tools
+
+    public static final RegistryObject<Item> SPIRIT_BRUSH = register("spirit_brush", properties -> new SpiritBrushItem(properties.stacksTo(1)));
+    public static final RegistryObject<Item> CARVED_SEAL = register("carved_seal", properties -> new CarvedSealItem(properties.stacksTo(1)));
+
+    // ---------------------------------------------------------------------------------- incense
+
+    private static final Map<IncenseKind, RegistryObject<Item>> INCENSE = new EnumMap<>(IncenseKind.class);
+
+    static {
+        for (IncenseKind kind : IncenseKind.VALUES) {
+            INCENSE.put(kind, register(kind.itemName(), properties -> new IncenseStickItem(properties.stacksTo(16), kind)));
+        }
+    }
+
+    public static RegistryObject<Item> incense(IncenseKind kind) {
+        return INCENSE.get(kind);
+    }
+
+    // ------------------------------------------------------------------------------------- pills
+
+    private static final Map<PillKind, RegistryObject<Item>> PILLS = new EnumMap<>(PillKind.class);
+
+    static {
+        for (PillKind kind : PillKind.VALUES) {
+            PILLS.put(kind, register(kind.itemName(), properties -> new PillItem(properties.stacksTo(16), kind)));
+        }
+    }
+
+    public static RegistryObject<Item> pill(PillKind kind) {
+        return PILLS.get(kind);
+    }
 
     // ---------------------------------------------------------------------------------- talismans
 

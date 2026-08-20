@@ -1,6 +1,11 @@
 package com.echoesofthepast.registry;
 
 import com.echoesofthepast.EchoesOfThePast;
+import com.echoesofthepast.block.alchemy.DingCauldronBlock;
+import com.echoesofthepast.block.craft.HerbDryingRackBlock;
+import com.echoesofthepast.block.craft.IncenseCenserBlock;
+import com.echoesofthepast.block.craft.InkstoneBlock;
+import com.echoesofthepast.block.craft.SealCarvingTableBlock;
 import com.echoesofthepast.block.formation.FootworkSealBlock;
 import com.echoesofthepast.block.formation.FormationBannerBlock;
 import com.echoesofthepast.block.formation.FormationCoreBlock;
@@ -141,6 +146,24 @@ public final class EOTPBlocks {
     /** Placed by pressing a talisman onto a surface; peeling it off returns the paper. */
     public static final RegistryObject<Block> PLACED_TALISMAN =
         registerNoItem("placed_talisman", PlacedTalismanBlock::new, EOTPBlocks::paper);
+
+    // -------------------------------------------------------------------------- craft and alchemy
+
+    public static final RegistryObject<Block> DING_CAULDRON =
+        register("ding_cauldron", DingCauldronBlock::new, () -> bronze().noOcclusion());
+
+    public static final RegistryObject<Block> INKSTONE =
+        register("inkstone", InkstoneBlock::new,
+            () -> BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).strength(1.4F, 3.0F).sound(SoundType.STONE).noOcclusion());
+
+    public static final RegistryObject<Block> SEAL_CARVING_TABLE =
+        register("seal_carving_table", SealCarvingTableBlock::new, () -> lacquer().noOcclusion());
+
+    public static final RegistryObject<Block> INCENSE_CENSER =
+        register("incense_censer", IncenseCenserBlock::new, () -> bronze().noOcclusion().lightLevel(state -> state.getValue(IncenseCenserBlock.LIT) ? 5 : 0));
+
+    public static final RegistryObject<Block> HERB_DRYING_RACK =
+        register("herb_drying_rack", HerbDryingRackBlock::new, () -> bamboo().noOcclusion());
 
     // ---------------------------------------------------------------------------------- plumbing
 

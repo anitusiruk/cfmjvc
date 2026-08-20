@@ -1,6 +1,11 @@
 package com.echoesofthepast.registry;
 
 import com.echoesofthepast.EchoesOfThePast;
+import com.echoesofthepast.block.alchemy.DingCauldronBlockEntity;
+import com.echoesofthepast.block.craft.HerbDryingRackBlockEntity;
+import com.echoesofthepast.block.craft.IncenseCenserBlockEntity;
+import com.echoesofthepast.block.craft.InkstoneBlockEntity;
+import com.echoesofthepast.block.craft.SealCarvingTableBlockEntity;
 import com.echoesofthepast.block.formation.FootworkSealBlockEntity;
 import com.echoesofthepast.block.formation.FormationCoreBlockEntity;
 import com.echoesofthepast.block.qi.BaguaDistributorBlockEntity;
@@ -76,6 +81,26 @@ public final class EOTPBlockEntities {
     public static final RegistryObject<BlockEntityType<PlacedTalismanBlockEntity>> PLACED_TALISMAN =
         BLOCK_ENTITIES.register("placed_talisman", () -> new BlockEntityType<>(
             PlacedTalismanBlockEntity::new, Set.of(EOTPBlocks.PLACED_TALISMAN.get())));
+
+    public static final RegistryObject<BlockEntityType<DingCauldronBlockEntity>> DING_CAULDRON =
+        BLOCK_ENTITIES.register("ding_cauldron", () -> new BlockEntityType<>(
+            DingCauldronBlockEntity::new, Set.of(EOTPBlocks.DING_CAULDRON.get())));
+
+    public static final RegistryObject<BlockEntityType<InkstoneBlockEntity>> INKSTONE =
+        BLOCK_ENTITIES.register("inkstone", () -> new BlockEntityType<>(
+            InkstoneBlockEntity::new, Set.of(EOTPBlocks.INKSTONE.get())));
+
+    public static final RegistryObject<BlockEntityType<SealCarvingTableBlockEntity>> SEAL_CARVING_TABLE =
+        BLOCK_ENTITIES.register("seal_carving_table", () -> new BlockEntityType<>(
+            SealCarvingTableBlockEntity::new, Set.of(EOTPBlocks.SEAL_CARVING_TABLE.get())));
+
+    public static final RegistryObject<BlockEntityType<IncenseCenserBlockEntity>> INCENSE_CENSER =
+        BLOCK_ENTITIES.register("incense_censer", () -> new BlockEntityType<>(
+            IncenseCenserBlockEntity::new, Set.of(EOTPBlocks.INCENSE_CENSER.get())));
+
+    public static final RegistryObject<BlockEntityType<HerbDryingRackBlockEntity>> HERB_DRYING_RACK =
+        BLOCK_ENTITIES.register("herb_drying_rack", () -> new BlockEntityType<>(
+            HerbDryingRackBlockEntity::new, Set.of(EOTPBlocks.HERB_DRYING_RACK.get())));
 
     public static void register(BusGroup modBus) {
         BLOCK_ENTITIES.register(modBus);
