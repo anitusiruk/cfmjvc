@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "P": "eotp:dark_lacquered_planks"
+  },
+  "pattern": [
+    "PPP",
+    "P P"
+  ],
+  "result": {
+    "id": "eotp:lacquered_low_table"
+  }
+}

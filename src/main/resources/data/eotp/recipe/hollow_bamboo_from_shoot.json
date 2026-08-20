@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "eotp:spirit_bamboo_shoot",
+    "eotp:spirit_bamboo_shoot"
+  ],
+  "result": {
+    "id": "eotp:hollow_bamboo"
+  }
+}

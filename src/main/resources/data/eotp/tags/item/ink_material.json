@@ -1,0 +1,14 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:charcoal",
+    "minecraft:coal",
+    "minecraft:clay_ball",
+    "eotp:cinnabar_pigment",
+    "eotp:jade_dust",
+    "eotp:wood_essence",
+    "eotp:earth_essence",
+    "eotp:moon_lotus_petal",
+    "eotp:echo_essence"
+  ]
+}

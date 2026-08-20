@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "H": "eotp:hollow_bamboo"
+  },
+  "pattern": [
+    "HHH"
+  ],
+  "result": {
+    "id": "eotp:hollow_bamboo_qi_flue",
+    "count": 4
+  }
+}

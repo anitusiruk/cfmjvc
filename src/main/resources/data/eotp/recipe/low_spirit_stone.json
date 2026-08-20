@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "eotp:raw_spirit_stone",
+    "eotp:raw_spirit_stone",
+    "eotp:raw_spirit_stone"
+  ],
+  "result": {
+    "id": "eotp:low_spirit_stone"
+  }
+}

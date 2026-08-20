@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "J": "eotp:raw_jade",
+    "C": "minecraft:compass"
+  },
+  "pattern": [
+    " J ",
+    "JCJ",
+    " J "
+  ],
+  "result": {
+    "id": "eotp:dragon_vein_compass"
+  }
+}

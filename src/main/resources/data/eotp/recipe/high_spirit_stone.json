@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "eotp:middle_spirit_stone",
+    "eotp:middle_spirit_stone",
+    "eotp:middle_spirit_stone",
+    "eotp:jade_dust",
+    "eotp:jade_dust"
+  ],
+  "result": {
+    "id": "eotp:high_spirit_stone"
+  }
+}

@@ -22,8 +22,10 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import com.echoesofthepast.qi.Phase;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ToolMaterial;
 import net.minecraft.world.item.equipment.ArmorMaterial;
@@ -32,6 +34,7 @@ import net.minecraftforge.eventbus.api.bus.BusGroup;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import org.jspecify.annotations.Nullable;
 
 public final class EOTPItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, EchoesOfThePast.MODID);
@@ -150,6 +153,16 @@ public final class EOTPItems {
 
     public static RegistryObject<Item> talisman(TalismanType type) {
         return TALISMANS.get(type);
+    }
+
+    /** The phase an essence item carries, or null if the stack is not an essence. */
+    public static @Nullable Phase essencePhase(ItemStack stack) {
+        if (stack.is(WOOD_ESSENCE.get())) return Phase.WOOD;
+        if (stack.is(FIRE_ESSENCE.get())) return Phase.FIRE;
+        if (stack.is(EARTH_ESSENCE.get())) return Phase.EARTH;
+        if (stack.is(METAL_ESSENCE.get())) return Phase.METAL;
+        if (stack.is(WATER_ESSENCE.get())) return Phase.WATER;
+        return null;
     }
 
     // ---------------------------------------------------------------------------------- plumbing

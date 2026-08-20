@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "S": "eotp:spirit_silk",
+    "D": "eotp:jade_dust"
+  },
+  "pattern": [
+    " S ",
+    "SDS",
+    " S "
+  ],
+  "result": {
+    "id": "eotp:meridian_thread_spool",
+    "count": 4
+  }
+}

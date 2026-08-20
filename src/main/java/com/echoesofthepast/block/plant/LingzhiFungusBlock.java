@@ -3,6 +3,11 @@ package com.echoesofthepast.block.plant;
 import com.echoesofthepast.block.QiDeviceBlockEntity;
 import com.echoesofthepast.registry.EOTPBlockEntities;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
@@ -47,6 +52,18 @@ public class LingzhiFungusBlock extends Block implements EntityBlock {
     @Override
     protected boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
         return level.getBlockState(pos.below()).isSolidRender();
+    }
+
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
+        if (level.isClientSide()) return InteractionResult.SUCCESS;
+        if (!(level instanceof ServerLevel serverLevel)) return InteractionResult.PASS;
+        if (!(level.getBlockEntity(pos) instanceof LingzhiFungusBlockEntity lingzhi)) return InteractionResult.PASS;
+
+        ItemStack harvested = lingzhi.harvest(serverLevel);
+        if (harvested.isEmpty()) return InteractionResult.PASS;
+        popResource(level, pos, harvested);
+        return InteractionResult.SUCCESS;
     }
 
     @Override

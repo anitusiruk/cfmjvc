@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "P": "eotp:red_lacquered_planks"
+  },
+  "pattern": [
+    "PPP"
+  ],
+  "result": {
+    "id": "eotp:lacquered_slab",
+    "count": 6
+  }
+}

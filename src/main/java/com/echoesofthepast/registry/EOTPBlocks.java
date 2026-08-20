@@ -235,6 +235,7 @@ public final class EOTPBlocks {
     // ---------------------------------------------------------------------------------- plumbing
 
     public static void register(BusGroup modBus) {
+        EOTPDecorative.init();
         BLOCKS.register(modBus);
     }
 

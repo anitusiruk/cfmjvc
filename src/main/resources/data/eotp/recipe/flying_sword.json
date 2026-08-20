@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "S": "minecraft:diamond",
+    "J": "eotp:raw_jade"
+  },
+  "pattern": [
+    " S ",
+    " S ",
+    " J "
+  ],
+  "result": {
+    "id": "eotp:flying_sword"
+  }
+}

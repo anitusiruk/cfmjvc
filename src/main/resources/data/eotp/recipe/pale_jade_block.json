@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "J": "eotp:raw_jade",
+    "D": "minecraft:lime_dye"
+  },
+  "pattern": [
+    "JJJ",
+    "JDJ",
+    "JJJ"
+  ],
+  "result": {
+    "id": "eotp:pale_jade_block"
+  }
+}

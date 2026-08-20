@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "eotp:talisman_paper",
+    "eotp:talisman_paper",
+    "eotp:talisman_paper",
+    "eotp:echo_essence"
+  ],
+  "result": {
+    "id": "eotp:echo_scroll"
+  }
+}

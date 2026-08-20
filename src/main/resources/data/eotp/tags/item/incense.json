@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "eotp:calming_incense",
+    "eotp:revealing_incense",
+    "eotp:suppressing_incense",
+    "eotp:kindling_incense",
+    "eotp:attuning_incense"
+  ]
+}

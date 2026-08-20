@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:redstone",
+    "minecraft:clay_ball",
+    "minecraft:quartz"
+  ],
+  "result": {
+    "id": "eotp:cinnabar_pigment",
+    "count": 2
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:block",
+  "random_sequence": "eotp:blocks/hanging_scroll_flame",
+  "pools": [
+    {
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "eotp:hanging_scroll_flame"
+        }
+      ]
+    }
+  ]
+}

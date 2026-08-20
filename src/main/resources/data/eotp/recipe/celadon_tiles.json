@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "eotp:celadon_bricks",
+    "eotp:celadon_bricks"
+  ],
+  "result": {
+    "id": "eotp:celadon_tiles",
+    "count": 2
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "eotp:talisman_paper",
+    "eotp:spirit_silk",
+    "minecraft:ink_sac"
+  ],
+  "result": {
+    "id": "eotp:hanging_scroll_return"
+  }
+}

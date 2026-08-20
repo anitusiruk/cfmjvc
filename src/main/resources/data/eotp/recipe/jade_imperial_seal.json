@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "J": "eotp:raw_jade",
+    "S": "eotp:high_spirit_stone"
+  },
+  "pattern": [
+    "JJJ",
+    "JSJ",
+    "JJJ"
+  ],
+  "result": {
+    "id": "eotp:jade_imperial_seal"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": "minecraft:copper_ingot",
+    "S": "eotp:low_spirit_stone"
+  },
+  "pattern": [
+    " C ",
+    "CSC",
+    "CCC"
+  ],
+  "result": {
+    "id": "eotp:bronze_spirit_bell"
+  }
+}

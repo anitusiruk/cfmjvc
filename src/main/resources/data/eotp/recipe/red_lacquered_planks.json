@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:oak_planks",
+    "minecraft:red_dye",
+    "minecraft:honeycomb"
+  ],
+  "result": {
+    "id": "eotp:red_lacquered_planks"
+  }
+}

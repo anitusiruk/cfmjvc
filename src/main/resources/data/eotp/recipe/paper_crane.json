@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "eotp:talisman_paper",
+    "eotp:talisman_paper"
+  ],
+  "result": {
+    "id": "eotp:paper_crane",
+    "count": 2
+  }
+}

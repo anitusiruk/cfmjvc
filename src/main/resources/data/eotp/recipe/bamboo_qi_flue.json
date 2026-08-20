@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": "eotp:spirit_bamboo_shoot"
+  },
+  "pattern": [
+    "BBB"
+  ],
+  "result": {
+    "id": "eotp:bamboo_qi_flue",
+    "count": 3
+  }
+}

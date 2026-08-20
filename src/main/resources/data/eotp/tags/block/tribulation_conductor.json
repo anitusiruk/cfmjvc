@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:lightning_rod",
+    "eotp:low_spirit_stone_block",
+    "eotp:middle_spirit_stone_block",
+    "eotp:high_spirit_stone_block",
+    "eotp:bronze_spirit_bell",
+    "eotp:formation_banner",
+    "eotp:jade_bi_reservoir"
+  ]
+}

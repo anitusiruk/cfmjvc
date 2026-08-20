@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    "eotp:spirit_bamboo",
+    "eotp:moon_lotus",
+    "eotp:lingzhi_spirit_fungus",
+    "minecraft:moss_block",
+    "minecraft:mud",
+    "minecraft:gravel",
+    "minecraft:sand",
+    "minecraft:clay",
+    "minecraft:bamboo",
+    "minecraft:short_grass",
+    "minecraft:fern",
+    "minecraft:sweet_berry_bush"
+  ]
+}

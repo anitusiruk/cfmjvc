@@ -1,0 +1,14 @@
+{
+  "replace": false,
+  "values": [
+    { "id": "#minecraft:planks", "required": false },
+    { "id": "#minecraft:stone_bricks", "required": false },
+    "eotp:red_lacquered_planks",
+    "eotp:black_lacquered_planks",
+    "eotp:dark_lacquered_planks",
+    "eotp:celadon_bricks",
+    "eotp:celadon_tiles",
+    "eotp:white_jade_block",
+    "eotp:pale_jade_block"
+  ]
+}

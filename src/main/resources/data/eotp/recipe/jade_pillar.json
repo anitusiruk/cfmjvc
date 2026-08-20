@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "J": "eotp:white_jade_block"
+  },
+  "pattern": [
+    "J",
+    "J"
+  ],
+  "result": {
+    "id": "eotp:jade_pillar",
+    "count": 2
+  }
+}

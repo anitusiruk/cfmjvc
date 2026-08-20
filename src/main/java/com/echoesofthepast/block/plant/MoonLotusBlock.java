@@ -2,7 +2,13 @@ package com.echoesofthepast.block.plant;
 
 import com.echoesofthepast.block.QiDeviceBlockEntity;
 import com.echoesofthepast.registry.EOTPBlockEntities;
+import com.echoesofthepast.registry.EOTPItems;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
@@ -51,6 +57,18 @@ public class MoonLotusBlock extends Block implements EntityBlock {
         BlockState below = level.getBlockState(pos.below());
         return below.is(Blocks.WATER) || below.is(net.minecraft.world.level.block.Blocks.MUD)
             || below.is(Blocks.CLAY) || below.getFluidState().isSource();
+    }
+
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
+        if (level.isClientSide()) return InteractionResult.SUCCESS;
+        if (!(level instanceof ServerLevel serverLevel)) return InteractionResult.PASS;
+        if (!(level.getBlockEntity(pos) instanceof MoonLotusBlockEntity lotus)) return InteractionResult.PASS;
+
+        int picked = lotus.pick(serverLevel);
+        if (picked <= 0) return InteractionResult.PASS;
+        popResource(level, pos, new ItemStack(EOTPItems.MOON_LOTUS_PETAL.get(), picked));
+        return InteractionResult.SUCCESS;
     }
 
     @Override

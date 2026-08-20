@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "S": "eotp:spirit_silk",
+    "K": "eotp:middle_spirit_stone"
+  },
+  "pattern": [
+    "S S",
+    "K K"
+  ],
+  "result": {
+    "id": "eotp:cloudstep_shoes"
+  }
+}

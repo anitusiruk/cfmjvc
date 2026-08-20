@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:block",
+  "random_sequence": "eotp:blocks/five_phase_conversion_wheel",
+  "pools": [
+    {
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "eotp:five_phase_conversion_wheel"
+        }
+      ]
+    }
+  ]
+}

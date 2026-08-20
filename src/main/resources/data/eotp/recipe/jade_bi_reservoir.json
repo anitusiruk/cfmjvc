@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "J": "eotp:raw_jade",
+    "S": "eotp:middle_spirit_stone"
+  },
+  "pattern": [
+    " J ",
+    "JSJ",
+    " J "
+  ],
+  "result": {
+    "id": "eotp:jade_bi_reservoir"
+  }
+}

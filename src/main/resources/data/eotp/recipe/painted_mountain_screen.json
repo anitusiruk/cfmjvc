@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "eotp:rice_paper_screen",
+    "minecraft:gray_dye",
+    "minecraft:ink_sac"
+  ],
+  "result": {
+    "id": "eotp:painted_mountain_screen"
+  }
+}

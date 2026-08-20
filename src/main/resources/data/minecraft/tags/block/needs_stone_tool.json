@@ -1,0 +1,21 @@
+{
+  "replace": false,
+  "values": [
+    "eotp:carved_jade_border",
+    "eotp:dark_jade_block",
+    "eotp:jade_abacus",
+    "eotp:jade_bi_reservoir",
+    "eotp:jade_flue_joint",
+    "eotp:jade_inlay",
+    "eotp:jade_pillar",
+    "eotp:jade_slab",
+    "eotp:jade_stairs",
+    "eotp:low_spirit_stone_block",
+    "eotp:middle_spirit_stone_block",
+    "eotp:pale_jade_block",
+    "eotp:resonance_stone",
+    "eotp:spirit_jade_block",
+    "eotp:spirit_stone_ore",
+    "eotp:white_jade_block"
+  ]
+}

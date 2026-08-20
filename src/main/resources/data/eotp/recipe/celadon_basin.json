@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": "eotp:celadon_bricks"
+  },
+  "pattern": [
+    "C C",
+    "CCC"
+  ],
+  "result": {
+    "id": "eotp:celadon_basin"
+  }
+}

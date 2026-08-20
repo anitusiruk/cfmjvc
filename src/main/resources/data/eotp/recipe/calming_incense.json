@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "eotp:spirit_bamboo_shoot",
+    "minecraft:gunpowder",
+    "eotp:moon_lotus_petal"
+  ],
+  "result": {
+    "id": "eotp:calming_incense",
+    "count": 3
+  }
+}

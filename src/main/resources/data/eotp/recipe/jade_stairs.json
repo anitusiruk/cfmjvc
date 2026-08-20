@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "J": "eotp:pale_jade_block"
+  },
+  "pattern": [
+    "J  ",
+    "JJ ",
+    "JJJ"
+  ],
+  "result": {
+    "id": "eotp:jade_stairs",
+    "count": 4
+  }
+}
