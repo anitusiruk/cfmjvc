@@ -27,7 +27,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -152,24 +152,25 @@ public class FlyingSwordItem extends Item {
         return InteractionResult.SUCCESS;
     }
 
+    /**
+     * The creature the wielder is looking at, chosen by how closely it lines up with their gaze
+     * rather than by a raycast, so a sword can be sent at something behind a fence. Nothing in
+     * front means the gesture is read as sword Qi instead.
+     */
     private @Nullable LivingEntity lookedAtCreature(ServerLevel level, Player player) {
-        HitResult hit = player.pick(24.0, 0.0F, false);
-        // Block hits are ignored on purpose: a sword sent at a wall should read as sword Qi instead.
         LivingEntity best = null;
-        double bestAngle = 0.35;
+        double bestDistance = Double.MAX_VALUE;
         for (LivingEntity candidate : level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(24.0))) {
             if (candidate == player || !candidate.isAlive()) continue;
-            var toTarget = candidate.position().add(0.0, candidate.getBbHeight() * 0.5, 0.0)
+            Vec3 toTarget = candidate.position().add(0.0, candidate.getBbHeight() * 0.5, 0.0)
                 .subtract(player.getEyePosition()).normalize();
-            double alignment = toTarget.dot(player.getLookAngle());
-            if (alignment > 1.0 - bestAngle) {
-                double distance = candidate.distanceToSqr(player);
-                if (best == null || distance < best.distanceToSqr(player)) {
-                    best = candidate;
-                }
+            if (toTarget.dot(player.getLookAngle()) < 0.65) continue;
+            double distance = candidate.distanceToSqr(player);
+            if (distance < bestDistance) {
+                bestDistance = distance;
+                best = candidate;
             }
         }
-        if (best != null) return best;
-        return hit.getType() == HitResult.Type.ENTITY ? null : null;
+        return best;
     }
 }

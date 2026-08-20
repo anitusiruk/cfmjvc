@@ -5,6 +5,7 @@ import com.echoesofthepast.qi.QiPulse;
 import com.echoesofthepast.qi.QiPulseReceiver;
 import com.echoesofthepast.qi.QiVisuals;
 import com.echoesofthepast.registry.EOTPBlockEntities;
+import com.echoesofthepast.registry.EOTPComponents;
 import com.echoesofthepast.registry.EOTPItems;
 import com.echoesofthepast.seal.SealRule;
 import com.echoesofthepast.sound.Resonance;
@@ -121,9 +122,9 @@ public class PlacedTalismanBlockEntity extends QiDeviceBlockEntity implements Qi
     public void peelOff(Player player) {
         if (!(this.level instanceof ServerLevel level)) return;
         ItemStack stack = new ItemStack(EOTPItems.talisman(this.type).get());
-        stack.set(com.echoesofthepast.registry.EOTPComponents.CHARGES.get(), this.charges);
+        stack.set(EOTPComponents.CHARGES.get(), this.charges);
         if (this.stampedRule != null) {
-            stack.set(com.echoesofthepast.registry.EOTPComponents.SEAL_RULE.get(), this.stampedRule);
+            stack.set(EOTPComponents.SEAL_RULE.get(), this.stampedRule);
         }
         player.getInventory().placeItemBackInInventory(stack);
         level.removeBlock(this.worldPosition, false);

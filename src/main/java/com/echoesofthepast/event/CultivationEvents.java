@@ -53,18 +53,15 @@ public final class CultivationEvents {
         Tribulation.tick(player);
 
         if (time % 20L == 0L) {
+            boolean still = player.getDeltaMovement().horizontalDistanceSqr() < 1.0E-4;
             SpiritProjection.tick(player);
-            if (cultivator.readyToBreakThrough()
-                && player.getDeltaMovement().horizontalDistanceSqr() < 1.0E-4
-                && !SpiritProjection.isProjecting(player)) {
+            if (cultivator.readyToBreakThrough() && still && !SpiritProjection.isProjecting(player)) {
                 BreakthroughRitual.tick(player, cultivator);
             }
-        }
 
-        if (time % 20L == 0L) {
             float ambient = DragonVeins.ambientQi(player.level(), pos);
             // Sitting still on a vein is the cheapest cultivation there is, and it looks the part.
-            boolean resting = player.getDeltaMovement().horizontalDistanceSqr() < 1.0E-4 && !player.isSprinting();
+            boolean resting = still && !player.isSprinting();
             cultivator.regenerateQi(ambient, resting);
             cultivator.seepQi();
 

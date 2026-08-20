@@ -12,7 +12,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.Identifier;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.saveddata.SavedData;
@@ -131,10 +130,5 @@ public final class EchoLog extends SavedData {
     /** How thick the echoes are around a point, which lanterns and censers make stronger. */
     public static float density(ServerLevel level, BlockPos center, int radius) {
         return Math.min(1.0F, near(level, center, radius, 64).size() / 24.0F);
-    }
-
-    public static void recordOnServer(MinecraftServer server, ServerLevel level, BlockPos pos, Kind kind, Component description) {
-        if (server == null) return;
-        record(level, pos, kind, description);
     }
 }

@@ -164,10 +164,6 @@ public final class BreakthroughRitual {
     }
 
     private static @Nullable HeartDemonEntity findDemon(ServerLevel level, UUID id) {
-        for (HeartDemonEntity demon : level.getEntitiesOfClass(HeartDemonEntity.class,
-            new net.minecraft.world.phys.AABB(BlockPos.ZERO).inflate(1.0))) {
-            if (demon.getUUID().equals(id)) return demon;
-        }
         return level.getEntity(id) instanceof HeartDemonEntity demon ? demon : null;
     }
 
