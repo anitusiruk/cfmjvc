@@ -1,8 +1,12 @@
 package com.echoesofthepast.registry;
 
 import com.echoesofthepast.EchoesOfThePast;
+import com.echoesofthepast.item.TalismanItem;
+import com.echoesofthepast.talisman.TalismanType;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.eventbus.api.bus.BusGroup;
@@ -44,6 +48,20 @@ public final class EOTPItems {
     public static final RegistryObject<Item> TALISMAN_PAPER = simple("talisman_paper");
     public static final RegistryObject<Item> HOLLOW_BAMBOO = simple("hollow_bamboo");
     public static final RegistryObject<Item> SPIRIT_BAMBOO_SHOOT = simple("spirit_bamboo_shoot");
+
+    // ---------------------------------------------------------------------------------- talismans
+
+    private static final Map<TalismanType, RegistryObject<Item>> TALISMANS = new EnumMap<>(TalismanType.class);
+
+    static {
+        for (TalismanType type : TalismanType.VALUES) {
+            TALISMANS.put(type, register(type.itemName(), properties -> new TalismanItem(properties.stacksTo(16), type)));
+        }
+    }
+
+    public static RegistryObject<Item> talisman(TalismanType type) {
+        return TALISMANS.get(type);
+    }
 
     // ---------------------------------------------------------------------------------- plumbing
 

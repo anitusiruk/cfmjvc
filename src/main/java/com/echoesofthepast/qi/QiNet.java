@@ -62,6 +62,31 @@ public final class QiNet {
         return accepted;
     }
 
+    /**
+     * Pushes Qi to an arbitrary position rather than a face neighbour, which is how the bagua
+     * distributor reaches the four corners around it.
+     */
+    public static float pushToPos(ServerLevel level, BlockPos from, QiStorage source, BlockPos to, float max, float efficiency) {
+        if (source.isEmpty() || max <= 0.0F) return 0.0F;
+        QiNode target = nodeAt(level, to);
+        if (target == null) return 0.0F;
+        QiStorage targetStorage = target.qiStorage(null);
+        if (targetStorage == null) return 0.0F;
+
+        float head = source.fillRatio() - targetStorage.fillRatio();
+        if (head <= 0.01F) return 0.0F;
+
+        float offered = Math.min(max, Math.min(source.amount(), targetStorage.space()));
+        if (offered <= 0.01F) return 0.0F;
+
+        QiPacket drawn = source.extract(offered, false);
+        float accepted = targetStorage.insert(drawn.amount() * efficiency, drawn.blend(), false);
+        if (accepted > 0.05F) {
+            QiVisuals.flow(level, from, to, drawn.blend(), accepted);
+        }
+        return accepted;
+    }
+
     /** Spreads Qi to every accepting neighbour, evenly. */
     public static float pushAround(ServerLevel level, BlockPos from, QiStorage source, float max, float efficiency) {
         float moved = 0.0F;

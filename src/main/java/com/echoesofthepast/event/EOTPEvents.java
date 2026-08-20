@@ -5,5 +5,6 @@ public final class EOTPEvents {
     private EOTPEvents() {}
 
     public static void register() {
+        CultivationEvents.register();
     }
 }

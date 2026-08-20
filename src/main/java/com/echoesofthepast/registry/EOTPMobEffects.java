@@ -1,7 +1,9 @@
 package com.echoesofthepast.registry;
 
 import com.echoesofthepast.EchoesOfThePast;
+import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraftforge.eventbus.api.bus.BusGroup;
 import net.minecraftforge.registries.DeferredRegister;
@@ -40,6 +42,20 @@ public final class EOTPMobEffects {
 
     public static void register(BusGroup modBus) {
         MOB_EFFECTS.register(modBus);
+    }
+
+    /** Builds a quiet effect instance: no particles, no icon clutter, just the state. */
+    public static MobEffectInstance quiet(RegistryObject<MobEffect> effect, int duration, int amplifier) {
+        return new MobEffectInstance(effect.getHolder().orElseThrow(), duration, amplifier, true, false, true);
+    }
+
+    /** Builds a visible effect instance for things the player should notice. */
+    public static MobEffectInstance loud(RegistryObject<MobEffect> effect, int duration, int amplifier) {
+        return new MobEffectInstance(effect.getHolder().orElseThrow(), duration, amplifier, false, true, true);
+    }
+
+    public static Holder<MobEffect> holder(RegistryObject<MobEffect> effect) {
+        return effect.getHolder().orElseThrow();
     }
 
     private static final class SimpleEffect extends MobEffect {

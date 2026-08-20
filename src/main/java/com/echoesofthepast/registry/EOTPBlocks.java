@@ -1,9 +1,23 @@
 package com.echoesofthepast.registry;
 
 import com.echoesofthepast.EchoesOfThePast;
+import com.echoesofthepast.block.formation.FootworkSealBlock;
+import com.echoesofthepast.block.formation.FormationBannerBlock;
+import com.echoesofthepast.block.formation.FormationCoreBlock;
+import com.echoesofthepast.block.formation.FormationInkBlock;
+import com.echoesofthepast.block.formation.FormationTileBlock;
+import com.echoesofthepast.block.qi.BaguaDistributorBlock;
+import com.echoesofthepast.block.qi.BronzeSpiritBellBlock;
+import com.echoesofthepast.block.qi.ConversionWheelBlock;
+import com.echoesofthepast.block.qi.JadeAbacusBlock;
 import com.echoesofthepast.block.qi.JadeBiReservoirBlock;
+import com.echoesofthepast.block.qi.MeridianThreadBlock;
 import com.echoesofthepast.block.qi.QiFlueBlock;
 import com.echoesofthepast.block.qi.QiFlueBlockEntity;
+import com.echoesofthepast.block.qi.QiPrismBlock;
+import com.echoesofthepast.block.qi.ResonanceStoneBlock;
+import com.echoesofthepast.block.talisman.PlacedTalismanBlock;
+import com.echoesofthepast.formation.FormationPart;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -49,6 +63,10 @@ public final class EOTPBlocks {
         return BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_RED).strength(1.6F, 2.5F).sound(SoundType.WOOD).ignitedByLava();
     }
 
+    private static BlockBehaviour.Properties formationTile() {
+        return BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(1.2F, 2.0F).sound(SoundType.STONE).noOcclusion().requiresCorrectToolForDrops();
+    }
+
     private static BlockBehaviour.Properties paper() {
         return BlockBehaviour.Properties.of().mapColor(MapColor.SNOW).strength(0.3F).sound(SoundType.WOOL).noOcclusion();
     }
@@ -66,6 +84,63 @@ public final class EOTPBlocks {
 
     public static final RegistryObject<Block> JADE_FLUE_JOINT =
         register("jade_flue_joint", props -> new QiFlueBlock(props, QiFlueBlockEntity.Material.JADE_JOINT), () -> jade().noOcclusion());
+
+    public static final RegistryObject<Block> JADE_MERIDIAN_THREAD =
+        register("jade_meridian_thread", MeridianThreadBlock::new,
+            () -> BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_WHITE).strength(0.2F).sound(SoundType.WOOL).noOcclusion().noCollision());
+
+    public static final RegistryObject<Block> BAGUA_DISTRIBUTOR =
+        register("bagua_distributor", BaguaDistributorBlock::new, EOTPBlocks::bronze);
+
+    public static final RegistryObject<Block> FIVE_PHASE_CONVERSION_WHEEL =
+        register("five_phase_conversion_wheel", ConversionWheelBlock::new, () -> bronze().noOcclusion());
+
+    public static final RegistryObject<Block> QI_PRISM =
+        register("qi_prism", QiPrismBlock::new, () -> jade().noOcclusion().lightLevel(state -> 6));
+
+    public static final RegistryObject<Block> BRONZE_SPIRIT_BELL =
+        register("bronze_spirit_bell", BronzeSpiritBellBlock::new, () -> bronze().noOcclusion());
+
+    public static final RegistryObject<Block> RESONANCE_STONE =
+        register("resonance_stone", ResonanceStoneBlock::new,
+            () -> BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(1.4F, 3.0F).sound(SoundType.AMETHYST).requiresCorrectToolForDrops());
+
+    public static final RegistryObject<Block> JADE_ABACUS =
+        register("jade_abacus", JadeAbacusBlock::new, () -> jade().noOcclusion());
+
+    // ------------------------------------------------------------------------------- formations
+
+    public static final RegistryObject<Block> FORMATION_NODE_TILE =
+        register("formation_node_tile", props -> new FormationTileBlock(props, FormationPart.NODE), EOTPBlocks::formationTile);
+
+    public static final RegistryObject<Block> FORMATION_LINE_TILE =
+        register("formation_line_tile", props -> new FormationTileBlock(props, FormationPart.LINE), EOTPBlocks::formationTile);
+
+    public static final RegistryObject<Block> FORMATION_ARC_TILE =
+        register("formation_arc_tile", props -> new FormationTileBlock(props, FormationPart.ARC), EOTPBlocks::formationTile);
+
+    public static final RegistryObject<Block> FORMATION_TRIGRAM_TILE =
+        register("formation_trigram_tile", props -> new FormationTileBlock(props, FormationPart.TRIGRAM), EOTPBlocks::formationTile);
+
+    /** Drawn by a loaded brush rather than placed, so it has no item. */
+    public static final RegistryObject<Block> FORMATION_INK =
+        registerNoItem("formation_ink", FormationInkBlock::new,
+            () -> BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).strength(0.05F).sound(SoundType.WOOL).noCollision().noOcclusion().instabreak());
+
+    public static final RegistryObject<Block> FORMATION_BANNER =
+        register("formation_banner", FormationBannerBlock::new,
+            () -> BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_RED).strength(0.5F).sound(SoundType.WOOL).noCollision().noOcclusion());
+
+    public static final RegistryObject<Block> FORMATION_CORE =
+        register("formation_core", FormationCoreBlock::new, () -> jade().noOcclusion().lightLevel(state -> 3));
+
+    public static final RegistryObject<Block> FOOTWORK_SEAL =
+        register("footwork_seal", FootworkSealBlock::new,
+            () -> BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(0.4F).sound(SoundType.STONE).noCollision().noOcclusion());
+
+    /** Placed by pressing a talisman onto a surface; peeling it off returns the paper. */
+    public static final RegistryObject<Block> PLACED_TALISMAN =
+        registerNoItem("placed_talisman", PlacedTalismanBlock::new, EOTPBlocks::paper);
 
     // ---------------------------------------------------------------------------------- plumbing
 
