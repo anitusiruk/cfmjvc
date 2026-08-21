@@ -276,7 +276,9 @@ Requires JDK 25 (Minecraft 26.1 needs it).
 
 See [FEATURES.md](FEATURES.md) for the fifty selected features and what each one actually does.
 
-## First hour, roughly
+## Intended first hour, roughly
+
+This summary assumes the survival-bootstrap blockers documented in the next section have been fixed.
 
 1. Mine spirit stone ore, refine raw stone into Low Spirit Stone.
 2. Grind charcoal on an inkstone, dip a brush, and draw a ring of formation ink with a node in it.
@@ -285,3 +287,376 @@ See [FEATURES.md](FEATURES.md) for the fifty selected features and what each one
 5. Sit still on a dragon vein until you have the insight to attempt Breath Gathering.
 6. Once you have Foundation, build a cultivation circuit and try a real breakthrough — and put some
    lightning rods up before you try for Golden Core.
+
+## Complete survival progression and interaction map
+
+### Current survival status
+
+The following progression is the intended complete route, but the present build is **not yet
+startable in an untouched survival world**. The server boots and every registry object works when
+placed or granted, but several acquisition and progression links are missing. These are code/data
+blockers, not missing textures:
+
+1. **Spirit Stone Ore is registered but never placed by world generation.** There is no configured
+   feature, placed feature, or biome modifier for either ore block, so Raw Spirit Stone and Raw Jade
+   have no natural source.
+2. **Spirit Bamboo, Moon Lotus, Earthroot Ginseng, Lingzhi, and Spirit Spring Water have no world
+   placement or loot source.** Their block items are creative-only until a natural spawn, trader, or
+   chest-loot route is added.
+3. **A Mortal cannot earn the first 40 insight.** `CultivationEvents` returns immediately for the
+   Mortal realm, while every implemented insight source is behind that return.
+4. **Every breakthrough requires an active Cultivation Formation, but all formations require
+   Foundation.** This makes Mortal → Breath Gathering and Breath Gathering → Foundation circular.
+5. **Formation discoveries, Reverse Cycle, and advanced Prism Facets have no initial survival
+   source.** Echo Scrolls can teach a stored discovery, but crafted scrolls begin blank and can only
+   copy knowledge somebody already has.
+6. **Placed Spirit Stone Blocks begin with empty `QiStorage`.** Their blockstate initially looks full,
+   then updates to empty; placing refined stone does not transfer stored Qi into the block entity.
+7. **Nascent Spirit Projection has no player input wired to `SpiritProjection.begin`.** Reaching the
+   realm grants the discovery, but there is no item, command, or key that starts projection.
+8. **Spirit Spring Water currently behaves as a hydrating Forge fluid and cleans the Ding.** The
+   promised plant-growth, alchemy-stability, and submerged-cultivation bonuses are not yet connected
+   to its fluid checks.
+9. **Sword armour pieces do not currently reduce technique cost.** The multiplier exists but is not
+   used by Sword Qi or Flying Sword costs; only the full-set projectile interception is active.
+
+Until those links are implemented, the exact fresh-world progression is: **vanilla survival begins,
+but the mod cannot be entered without `/give`, `/setblock`, creative mode, or another mod supplying
+its registered materials**. The stages below define the survival contract the missing links need to
+make real; all downstream recipes and interactions already follow this order.
+
+### Required survival bootstrap
+
+To make the route below genuinely playable, the minimum implementation is:
+
+- generate Spirit Stone Ore in ordinary stone and its deepslate variant at lower levels;
+- place rare Spirit Bamboo patches, Moon Lotus pools, Earthroot Ginseng, Lingzhi, and non-renewable
+  Spirit Spring sources, or put their starters into explicit loot/trade tables;
+- let Mortals gain their first 40 insight from stillness on a Dragon Vein, then use a simple
+  vein-based Breath Gathering ritual that does not require a formation;
+- permit a Breath Gathering cultivator to power a Cultivation Formation for the Foundation attempt,
+  or provide a separate pre-Foundation breakthrough circle;
+- seed at least Formation Basics, Gathering, Cultivation, Reverse Cycle, and Prism Facets through
+  pre-filled Echo Scroll loot or observable discovery actions;
+- initialise placed Spirit Stone Blocks with Qi appropriate to their grade, or provide a direct way
+  to charge them from held stones;
+- bind Nascent Spirit Projection to an item or server-validated input;
+- add explicit Spirit Spring checks to cultivation, plants, and the Ding process.
+
+### Stage 0 — finding the hidden world
+
+1. **Mine naturally generated Spirit Stone Ore.** The intended drop is Raw Spirit Stone; deepslate
+   ore is the deeper, tougher source.
+2. **Refine the first material split.** Three Raw Spirit Stones craft one Low Spirit Stone. Smelting
+   one Raw Spirit Stone produces Raw Jade, and one Raw Jade grinds into two Jade Dust.
+3. **Craft the Dragon-Vein Compass** from a vanilla compass and Raw Jade. Using it in the air paints
+   nearby vein segments, reports strength, phase, flow direction, and crossings, and displays the
+   player's cultivation state. Using it on a device reports stored Qi; using it on a core reports the
+   formation; using it on a stamped container reports the seal channel.
+4. **Choose a base site.** A strong vein increases device site quality and ambient Qi. An
+   intersection doubles stillness insight and is the ideal long-term cultivation room. Dragon Veins
+   are mathematical fields derived from the world seed, so they do not need structures or chunks to
+   generate.
+5. **Collect the natural starters:** Spirit Bamboo Shoot, Moon Lotus, Ginseng, Lingzhi, and a limited
+   Spirit Spring source. These open the renewable plant and essence loop.
+
+**Interaction chain:** world seed → Dragon Vein strength/phase/flow → ambient Qi and site quality →
+plant growth, personal regeneration, and more efficient workshops.
+
+### Stage 1 — raw materials and the first workshop
+
+1. **Build the Spirit Stone grades.** Three Raw Spirit Stones make one Low stone; three Low stones
+   plus Jade Dust make one Middle stone; three Middle stones plus two Jade Dust make one High stone.
+   One Low stone can instead be crushed into four Spirit Stone Powder catalyst charges.
+2. **Grow Spirit Bamboo near ambient Qi.** It will not progress in a dead site. Normal feeding makes
+   useful bamboo; excessive nearby device Qi makes the next section Hollow Spirit Bamboo. Two shoots
+   make Hollow Bamboo as a crafting shortcut.
+3. **Make Spirit Silk** from three strings and Jade Dust. Bamboo, silk, jade, paper, and stone are the
+   shared inputs for almost every early magical tool.
+4. **Build an Inkstone** from blackstone and a Spirit Brush from bamboo and Spirit Silk. Put one
+   pigment on the Inkstone, then empty-hand click six times to grind it fully. Dipping the brush gives
+   the maximum strokes; dipping early gives proportionally fewer.
+5. **Build simple decorated rooms.** Celadon and carved jade adjacent to a `QiNode` reduce its passive
+   leakage. Lacquered blocks are the intended seal-workshop surfaces. Their stairs/slabs/walls share
+   the family texture and mechanical tag.
+
+**Ink inputs:** charcoal/coal → Plain; Cinnabar Pigment → Fire; Jade Dust → Metal; Wood Essence →
+Wood; clay or Earth Essence → Earth; Moon Lotus Petal → Water; Echo Essence → memory-bearing Echo
+ink.
+
+### Stage 2 — producing and moving Qi
+
+The first renewable machine Qi is intended to come from Moon Lotus; later, Gathering Formations and
+Tribulation become the large sources.
+
+1. **Plant Moon Lotus over water or mud with an open sky.** It closes by day. At night it inserts
+   Water Qi into its internal storage, grows up to three petals, and pushes Qi into adjacent
+   `QiNode`s.
+2. **Put a Jade Bi Reservoir beside it.** A reservoir stores 400 base Qi. Nearby Bi Reservoirs raise
+   one another's capacity with diminishing returns, making a spaced ring better than an opaque cube.
+3. **Run Bamboo Qi Flues from storage.** Straight horizontal runs retain most Qi. Bends, upward
+   travel, long uninterrupted runs, Hollow Bamboo, and turbulence all increase loss. Jade Flue Joints
+   forgive bends and reset run length. Flow only moves from a higher fill ratio toward a lower one.
+4. **Use a Bagua Distributor at branches.** Click cycles Alternate, Clockwise, Opposed, Priority,
+   Spread, and Generative routing. Sneak-click rotates its front. Generative mode inspects neighbour
+   phase character and avoids combinations that fight.
+5. **Use the Five-Phase Conversion Wheel** when Water Qi is not the phase a process needs. Add Spirit
+   Stone Powder as catalyst; click chooses the source phase. Forward conversion follows
+   Wood → Fire → Earth → Metal → Water at 70% output. Reverse conversion requires its discovery,
+   returns only 40%, and adds turbulence.
+6. **Use Jade Meridian Thread for logic, not bulk power.** A pulse advances one block per tick and
+   loses a fixed amount per block. Branches duplicate a signal; they do not divide continuous power.
+7. **Use the Qi Prism for open-space pulses.** Relay continues a beam, Split makes two, Focus raises
+   its outgoing strength, Bend turns it, Filter passes only the selected phase, and Scatter sends
+   four horizontal beams. Advanced facets require their discovery.
+8. **Use Bells, Resonance Stones, and the Abacus for control.** Bell pitch encodes pulse strength and
+   broadcasts a tone. A Resonance Stone stores Qi until its selected tone is heard. The Abacus counts
+   reservoir fullness/emptiness, pulses, tones, or timed intervals; its visible bead value is the
+   threshold.
+9. **Use Footwork Seals for movement input.** Sneaking, walking, running, leaping, and Cloudstepping
+   produce progressively stronger pulses and different tones.
+
+**Power chain:** Moon Lotus / Gathering Formation / Tribulation → Reservoir or Spirit Stone Block →
+Flue → Bagua → conversion or storage → machine. **Logic chain:** Abacus / Footwork Seal / Bell →
+Meridian Thread or Prism → Resonance Stone / Talisman / Formation Core.
+
+### Stage 3 — herbs, essences, and the Five Phases
+
+1. **Grow Earthroot Ginseng in a deliberately varied garden.** It counts distinct nearby dirt, logs,
+   leaves, flowers, stone, fluids, and tagged natural blocks. Variety raises its random growth chance;
+   rows of one block do not.
+2. **Place Lingzhi near turbulent machinery.** Every second it removes turbulence from nearby Qi
+   storage. Absorbed pollution fills four visible saturation stages; harvesting yields that many
+   Lingzhi Caps.
+3. **Use the Herb Drying Rack to choose what an herb becomes.** A bundle records sun, moon, and
+   censer-smoke exposure; the dominant condition at completion decides the result.
+4. **Create the phase essences.** Moon Lotus in sun → Fire, in moonlight → Water, in smoke → Echo.
+   Ginseng in sun → Earth, in moonlight → Wood, in smoke → Metal. Lingzhi under any completed drying
+   route → Purified Lingzhi. Bamboo under smoke → Hollow Bamboo; otherwise → Wood Essence.
+5. **Burn incense beside a rack to force its smoke route.** Calming Incense needs Bamboo, gunpowder,
+   and Moon Lotus; this is the intended first smoke source. Revealing uses Echo Essence, Suppressing
+   uses Purified Lingzhi, Kindling uses Fire Essence, and Attuning uses Earth Essence.
+
+**Garden chain:** ambient Qi → plants → rack condition → phase essences/Echo Essence → conversion,
+alchemy, seals, roots, advanced machines, and discoveries.
+
+### Stage 4 — ink, seals, and talismans
+
+1. **Make Talisman Paper** from paper and a Spirit Bamboo Shoot. Put one sheet on the Seal-Carving
+   Table.
+2. **Select a rule.** Empty-hand click the table to cycle Bind, Repel, Gather, Silence, Preserve,
+   Return, and Divide.
+3. **Carve the seal** by using wood, stone, bronze, or jade on the table. Material changes lifetime:
+   wood 8 stamps, stone 20, bronze 48, jade 128.
+4. **Brush the paper with loaded ink, then stamp it.** The seal rule says what the instruction does;
+   the ink phase changes its expression. For example, Bind with Fire ink makes an Ember Talisman,
+   while ordinary Bind makes Binding.
+5. **Use or place the result.** Using a talisman on a creature requires the Hand Meridian and pays
+   twice its normal Qi cost from the player. Using it on a solid face creates a Placed Talisman with
+   eight charges. Pulses or slowly accumulated Qi fire it; each firing consumes a charge.
+
+**Implemented talismans:** Repulsion pushes living entities; Ember places fire and burns; Binding
+stops non-player targets; Preservation refreshes dropped-item lifetimes; Clear Heart grants the state
+used against Heart Demons; Gather pulls items; Silence clears mob targets; Return reverses
+projectiles.
+
+### Stage 5 — formation engineering
+
+1. **Make Line Tiles** from smooth stone. A Line plus Jade Dust makes an Arc; a Line plus Low Spirit
+   Stone makes a Node; a Node plus Echo Essence and Raw Jade makes a Trigram. Plain Formation Ink is
+   the cheap way to bridge gaps.
+2. **Lay a connected circuit around a Formation Core.** The survey walks horizontal neighbours and
+   one-block steps. A circuit is closed only when every mark has at least two connections, so any
+   dead end prevents identification.
+3. **Right-click the Core** to bind ownership and inspect the result. The owner must meet the realm
+   and discovery gate; otherwise the valid shape remains inert.
+4. **Feed the Core Qi.** Every active formation drains upkeep once per second. Feeding the preferred
+   phase blend increases strength; mismatched Qi weakens it. Banners add vertical reach and up to a
+   capped strength bonus.
+
+Exact circuit recognition:
+
+- **Gathering:** closed, at least one Node, at least 8 marks; 8 Qi/second; accepts any phase. It draws
+  ambient vein Qi into the Core and pushes it to adjacent devices.
+- **Repulsion:** closed, a Repel seal, at least 12 marks; 12 Qi/second; prefers Metal. It pushes hostile
+  mobs away. Banners turn the floor field into a taller wall.
+- **Preservation:** closed, a Preserve seal, at least 10 marks; 10 Qi/second; prefers Earth. It gives
+  dropped items unlimited lifetime within the circuit.
+- **Cultivation:** closed, at least 4 Trigrams, at least 3 ink phases, at least 16 marks;
+  20 Qi/second; prefers balanced Qi. It grants insight to still players and supports breakthroughs.
+- **Attunement:** closed, all 5 ink phases, at least 2 Trigrams, at least 20 marks; 40 Qi/second;
+  prefers balanced Qi. It does not passively alter players; it enables essence offerings at the Core.
+
+**Formation chain:** ink/tile topology + stamped rule + phase colours + supplied Qi + owner discovery
+→ identified active effect.
+
+### Stage 6 — entering cultivation and opening meridians
+
+After the bootstrap deadlock is repaired, the intended cultivation order is:
+
+1. **Mortal → Breath Gathering:** earn 40 insight through stillness on a vein, then complete the
+   pre-formation breathing ritual. Breath Gathering gives 60 personal Qi capacity and slow natural
+   regeneration.
+2. **Open meridians by doing their work.** Hand requires 100 practice from bound-sword/talisman use;
+   Foot requires 100 from leaps, Footwork Seals, and Cloudsteps; Heart requires 140 from surviving
+   damage; Crown requires 140 from reading echoes and Qi; Dantian requires 200 and raises personal
+   capacity by 50%.
+3. **Breath Gathering → Foundation:** earn 160 insight, then hold a balanced Cultivation Formation
+   together for 30 good one-second readings. Breath-stage attempts can raise a Heart Demon.
+4. **Foundation:** unlocks formation ownership and operation. Continue earning insight through
+   stillness, Kindling Incense, and active Cultivation Formations.
+5. **Foundation → Golden Core:** earn 520 insight and repeat the ritual. This attempt can raise a
+   Heart Demon and calls seven Tribulation bolts halfway through. Golden Core gives 700 base personal
+   Qi, persistent storage, and passive artifact support.
+6. **Golden Core → Nascent Spirit:** earn 1,400 insight and survive the hardest demon/tribulation
+   attempt. Nascent Spirit gives 1,800 base Qi and the Projection discovery.
+
+The ritual starts at 60% stability. Good readings combine balanced phase similarity, harmony, Core
+strength, Clear Heart, previous failures, and root conflict. Bad readings remove stability; zero
+causes failure, loses 35% current insight, destabilises the Core, and applies Qi Deviation.
+
+### Stage 7 — Heavenly Tribulation and the Heart Demon
+
+**Heart Demon:** appears one-third into dangerous breakthroughs and binds to the cultivator. Weapon
+damage is cancelled and restores its resolve, so attacking it is counterproductive. Clear Heart
+continuously erodes it; four successful demon hits fail the ritual. Dispelling one teaches Heart
+Demon lore.
+
+**Tribulation:** starts halfway through Foundation and Golden-Core realm attempts. Seven bolts fall
+40 ticks apart. Each bolt chooses the highest tagged conductor within ten blocks, then another
+`QiNode`, then the player. A machine hit accepts up to 400 Metal Qi and gains heavy turbulence.
+Catching at least three bolts teaches Tribulation Routing. This makes rods, bells, banners, Spirit
+Stone Blocks, and Bi Reservoirs into deliberate lightning infrastructure.
+
+**Recovery:** reaching Golden Core forms it automatically. Death empties personal Qi and adds 6,000
+ticks of instability instead of deleting progression. Instability lowers Core capacity and natural
+regeneration until it settles. Breakthrough-Stabilising Pills shorten it.
+
+### Stage 8 — root attunement
+
+1. Build and activate an Attunement Formation with all five phases.
+2. Stand inside its area and use a phase essence on the Core. Each offering costs the Core 240 Qi.
+3. Offering a phase not in the root adds it; offering an existing phase removes it. A root holds at
+   most three phases. Every rewrite destabilises the Golden Core for 2,400 ticks.
+4. A single root is coherent and reliable. Roots in adjacent generating relationships remain
+   relatively calm. Roots that overcome one another are conflicted: they increase technique force
+   but also raise deviation and breakthrough risk.
+5. Root affinity changes how efficiently personal Qi absorbs an incoming phase. The root's blend is
+   also the phase character of naturally regenerated personal Qi.
+
+**Root chain:** phase essence + Attunement Formation + Core Qi → chosen affinities → personal Qi
+blend, technique power, absorption efficiency, and breakthrough risk.
+
+### Stage 9 — the complete alchemy route
+
+Throw ingredients into the Ding in this exact order, supply the requested Qi blend through its
+network, and control heat from the block below. Lava targets 900 heat, fire 700, ordinary campfire
+620, soul campfire 520, magma 420; Fire Qi can add up to 420 more. Water or Spirit Spring buckets
+clean accumulated residue.
+
+Exact recipes and heat windows:
+
+- **Qi-Recovery:** Low Spirit Stone → Moon Lotus Petal → Spirit Stone Powder; 300–620 heat; balanced
+  Qi; yields 2.
+- **Meridian-Opening:** Ginseng Root → Meridian Thread Spool → Middle Spirit Stone; 480–760 heat;
+  Wood/Water Qi; yields 1.
+- **Clear-Heart:** Moon Lotus Petal → Purified Lingzhi → Water Essence; 220–480 heat; Water Qi;
+  yields 2.
+- **Body-Tempering:** Ginseng Root → Earth Essence → Metal Essence → Jade Dust; 620–900 heat;
+  Earth/Metal Qi; yields 1.
+- **Cloudstep:** Spirit Bamboo Shoot → Moon Lotus Petal → Spirit Silk; 260–520 heat; Water/Wood Qi;
+  yields 2.
+- **Five-Phase Harmony:** Wood → Fire → Earth → Metal → Water Essence; 400–700 heat; balanced Qi;
+  yields 1.
+- **Breakthrough-Stabilising:** High Spirit Stone → Ginseng Root → Echo Essence → Jade Dust;
+  540–820 heat; Earth Qi; yields 1.
+
+Every second of cooking scores heat, phase similarity, calmness, and cleanliness. The average yields
+Cracked below 45%, Ordinary from 45%, Refined from 75%, and Perfect from 93%. Scorching above 1,050
+heat sharply lowers the score. Failed work returns Pill Residue. Repeating the same medicine raises
+per-player tolerance, reducing later doses until tolerance decays.
+
+**Alchemy chain:** garden/ore → preparation order + controlled heat + phase-engineered Qi + clean Ding
+→ deterministic quality → cultivation, combat, movement, and breakthrough support.
+
+### Stage 10 — sword cultivation and Cloudstep
+
+1. Craft the Flying Sword from diamonds and Raw Jade. A non-Mortal sneak-right-clicks to bind it.
+2. Open the Hand Meridian. Right-click while looking at a creature spends 12 personal Qi, creates the
+   orbiting sword entity, and sends it to strike once before returning. Golden Core grants an extra
+   chained cut; Flowing River Intent grants another.
+3. The sword learns from actual attacks: undead → Purifying, descending aerial attacks → Falling
+   Star, crowds → Flowing River, sneaking/guarded use → Mountain, ordinary precise use → Still Water.
+   An intent must lead the runner-up clearly before it becomes dominant.
+4. Right-click without a target to release Sword Qi for 8 personal Qi. The arc damages creatures,
+   clears vegetation, removes beneficial magical effects from victims, and sends pulses into
+   formation devices it crosses.
+5. Wear Cloudstep Shoes or take a Cloudstep Pill. At the jump apex, or while falling fast and
+   sprinting, spend 6 Qi to kick forward and upward. Shoes give two steps, the potion one, and an open
+   Foot Meridian adds one, capped at three.
+6. The full Sword Cultivator set can spend 5 Qi to cancel one indirect hit while a bound sword is
+   held. The full Alchemist set reduces Fire and Magic damage to 60%.
+
+**Combat chain:** repeated fighting style → Sword Intent → changed flying-sword behaviour and Sword Qi
+strength; meridian + personal Qi + equipment → whether each technique can fire.
+
+### Stage 11 — Echoes, discovery, and automation
+
+1. The world automatically records block breaking, block placement, deaths, rituals, finished pills,
+   sword techniques, awakened tablets, attunements, and tribulation. Entries expire after the
+   configured Echo memory time.
+2. With an open Crown Meridian, use the Echo Mirror for 4 personal Qi. It draws each recent event at
+   its original position and reports what happened and how many seconds ago.
+3. Craft or find an Echo Scroll. A pre-filled scroll permanently teaches its stored discovery. A
+   blank scroll copies the first discovery its reader already knows, letting knowledge be handed to
+   another player.
+4. Place an Ancestral Tablet within five blocks of a device and repeat a job. It records relative
+   target positions and the actions Strike, Feed, Turn, Stir, or Harvest. When the same sequence has
+   repeated three times, it becomes the lesson.
+5. Feed the trained tablet Echo Essence to awaken it. Every 40 ticks it spends 3 stored Qi and replays
+   the next gesture with visible Echo hands. Feed actions pull one item from any adjacent container;
+   unused items are returned or dropped.
+6. Imprint-compatible targets include the Ding, Censer, Drying Rack, Bell, Bagua, Conversion Wheel,
+   Moon Lotus, and Lingzhi. A missing target does not erase the lesson; the tablet visibly reaches for
+   the empty place and tries again later.
+
+**Memory chain:** world action → Echo Log → Mirror/Scroll knowledge → repeated observed sequence →
+awakened Tablet → physical automation.
+
+### Stage 12 — sealed logistics
+
+1. Craft a Jade Imperial Seal and sneak-use it to cycle Hall, Kitchen, Store, Kiln, Garden, Study,
+   Gate, and Workshop faces.
+2. Use the seal on a container to apply that household mark. Applying the same mark again removes it.
+3. Hold a Paper Crane with the seal in the other hand to address the crane.
+4. Use the crane on a source container. It spends 5 personal Qi, removes the first non-empty stack,
+   and physically flies to the nearest loaded destination container with the same mark within
+   64 blocks.
+5. Rain, water, or one hit destroys the crane and drops its cargo. A full or missing destination also
+   makes it set the cargo down rather than delete it.
+
+**Logistics chain:** named seal face → stamped source/destination household → addressed crane + player
+Qi → visible item transport. This is intentionally slower and more vulnerable than pipes.
+
+### Stage 13 — late-game workshop loop
+
+At the end of progression, all systems feed one another:
+
+- Dragon Veins and Moon Lotus provide steady baseline Qi.
+- Gathering Formations scale ambient generation; Tribulation provides dangerous burst generation.
+- Bi Reservoir rings and Spirit Stone Blocks buffer supply.
+- Flues move power; Bagua routes it; Conversion Wheels create the needed phases; Lingzhi removes the
+  turbulence that conversion and lightning create.
+- Abacuses, Bells, Resonance Stones, Footwork Seals, Threads, and Prisms make the control layer.
+- Gardens and Drying Racks create the essences used by alchemy, root rewriting, incense, ink, and
+  advanced recipes.
+- Talismans provide small local instructions; formations provide continuous area rules.
+- Pills support meridians, combat, movement, roots, and dangerous realm attempts.
+- Echo Mirrors reveal history, Scrolls transfer understanding, Tablets repeat demonstrated work,
+  Seals group inventories, and Cranes move the physical results.
+- Jade and celadon architecture reduces leakage around the machinery; lacquered furniture houses the
+  paper-and-seal workflow. Screens and hanging scrolls are currently decorative only.
+
+The intended final rhythm is therefore not a linear machine tier: **observe the land → cultivate a
+living Qi source → route and balance it → turn it into medicine, formations, and techniques → survive
+the spiritual consequences → teach the workshop to repeat what you learned.**
