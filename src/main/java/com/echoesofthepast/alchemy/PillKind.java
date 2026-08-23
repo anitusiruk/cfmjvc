@@ -84,13 +84,20 @@ public enum PillKind implements StringRepresentable {
             CultivationStore.touch(player);
         }
     },
-    /** Forgives one failed breakthrough and steadies a rattled core. */
+    /**
+     * Suppresses Core Discord and shortens instability. It does not make a ritual more likely to
+     * succeed: it clears the wreckage of one that already failed, or the shock of dying.
+     */
     BREAKTHROUGH_STABILISING("breakthrough_stabilising", PhaseBlend.of(Phase.EARTH)) {
         @Override
         protected void apply(ServerPlayer player, Cultivator cultivator, float strength) {
+            boolean settled = cultivator.path().suppressOneDiscord();
             cultivator.forgiveFailure();
             cultivator.settleCore((int) (4000 * strength));
             CultivationStore.touch(player);
+            if (settled) {
+                Tell.chat(player, Component.translatable("eotp.message.discord_suppressed"));
+            }
         }
     };
 

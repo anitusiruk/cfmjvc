@@ -8,7 +8,10 @@ import com.echoesofthepast.cultivation.Cultivator;
 import com.echoesofthepast.cultivation.Meridian;
 import com.echoesofthepast.cultivation.Realm;
 import com.echoesofthepast.cultivation.SpiritProjection;
+import com.echoesofthepast.cultivation.Tendencies;
+import com.echoesofthepast.cultivation.Tendency;
 import com.echoesofthepast.cultivation.Tribulation;
+import com.echoesofthepast.cultivation.Witnesses;
 import com.echoesofthepast.fluid.SpiritSpringEffects;
 import com.echoesofthepast.qi.PhaseBlend;
 import com.echoesofthepast.qi.QiVisuals;
@@ -75,11 +78,12 @@ public final class CultivationEvents {
             cultivator.seepQi();
 
             if (resting) {
-                float insight = 0.05F + ambient * 0.35F;
-                if (DragonVeins.isIntersection(player.level(), pos)) {
-                    insight *= 2.0F;
+                // Sitting still is not experience any more. It is how a cultivator holds a
+                // principle true, which is what Verses and Discord repair are watching for.
+                Tendencies.note(player, Tendency.STILLNESS, 0.05F + ambient * 0.15F);
+                if (DragonVeins.isIntersection(player.level(), pos) || inSpiritSpring) {
+                    Tendencies.note(player, Tendency.OBSERVING, 0.05F);
                 }
-                Cultivation.insight(player, insight * (inSpiritSpring ? 1.5F : 1.0F));
             }
 
             if (cultivator.coreInstability() > 0) {
@@ -103,22 +107,24 @@ public final class CultivationEvents {
         }
     }
 
+    /**
+     * A mortal's whole loop. There is nothing to grind: they are working toward the Three Witnesses,
+     * and only once all three are given does the First Breath Ritual become possible.
+     */
     private static void cultivateFirstBreath(ServerPlayer player, Cultivator cultivator, long time, BlockPos pos) {
-        boolean still = player.getDeltaMovement().horizontalDistanceSqr() < 1.0E-4 && !player.isSprinting();
-        if (time % 20L == 0L && still) {
-            float vein = DragonVeins.strength(player.level(), pos);
-            if (vein >= 0.15F) {
-                float springBonus = SpiritSpringEffects.nearby(player.level(), pos, 1) ? 1.5F : 1.0F;
-                Cultivation.insight(player, (0.12F + vein * 0.28F) * springBonus);
-                if (time % 40L == 0L) {
-                    QiVisuals.ring(
-                        player.level(),
-                        player.position().add(0.0, 0.05, 0.0),
-                        0.45,
-                        DragonVeins.phaseOf(player.level(), pos).color(),
-                        8
-                    );
-                }
+        if (time % 20L == 0L) {
+            Witnesses.tickEarth(player, cultivator);
+            Witnesses.checkSelf(player, cultivator);
+
+            boolean still = player.getDeltaMovement().horizontalDistanceSqr() < 1.0E-4 && !player.isSprinting();
+            if (still && DragonVeins.strength(player.level(), pos) >= 0.15F && time % 40L == 0L) {
+                QiVisuals.ring(
+                    player.level(),
+                    player.position().add(0.0, 0.05, 0.0),
+                    0.45,
+                    DragonVeins.phaseOf(player.level(), pos).color(),
+                    8
+                );
             }
         }
 

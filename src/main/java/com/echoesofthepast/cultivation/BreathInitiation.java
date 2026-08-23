@@ -16,11 +16,13 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * The Ninefold Returning Breath: the pre-formation initiation into cultivation.
+ * The First Breath Ritual, performed as the Ninefold Returning Breath.
  *
- * <p>Once a Mortal has gathered enough insight, they crouch without moving on a strong Dragon Vein.
- * Each breath alternates between facing downstream and upstream. The compass reveals the current,
- * so the ritual asks the player to read the land rather than click an advancement button.
+ * <p>A mortal who has given all three Witnesses crouches without moving on a strong Dragon Vein and
+ * breathes with the current: downstream, then upstream, alternating. The compass reveals the flow,
+ * so the ritual asks the player to read the land rather than to have waited long enough.
+ *
+ * <p>The Witnesses are spent when it succeeds. They were proofs, not currency.
  */
 public final class BreathInitiation {
     private static final float MINIMUM_VEIN = 0.35F;
@@ -93,6 +95,7 @@ public final class BreathInitiation {
         if (attempt.breaths < BREATHS_REQUIRED) return;
 
         ATTEMPTS.remove(player.getUUID());
+        cultivator.path().consumeWitnesses();
         cultivator.advanceRealm();
         cultivator.addQi(cultivator.qiCapacity() * 0.25F, veinBlend);
         CultivationStore.touch(player);

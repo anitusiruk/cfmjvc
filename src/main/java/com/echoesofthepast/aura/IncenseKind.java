@@ -1,6 +1,8 @@
 package com.echoesofthepast.aura;
 
 import com.echoesofthepast.cultivation.Cultivation;
+import com.echoesofthepast.cultivation.Cultivator;
+import com.echoesofthepast.cultivation.Meridian;
 import com.echoesofthepast.echo.EchoLog;
 import com.echoesofthepast.qi.Phase;
 import com.echoesofthepast.qi.PhaseBlend;
@@ -60,13 +62,31 @@ public enum IncenseKind implements StringRepresentable {
             }
         }
     },
-    /** Speeds up cultivation for anybody sitting still in it. */
+    /**
+     * Deepens the practice of anybody sitting still in it. There is no experience to hand out, so
+     * the smoke instead works on whichever channel the cultivator has been neglecting.
+     */
     KINDLING("kindling", 8.0) {
         @Override
         public void breathe(ServerLevel level, BlockPos pos, double radius, float strength, @Nullable Phase phase) {
             for (Player player : level.getEntitiesOfClass(Player.class, area(pos, radius))) {
                 if (player.getDeltaMovement().horizontalDistanceSqr() > 1.0E-4) continue;
-                Cultivation.insight(player, 0.25F * strength);
+                Cultivator cultivator = Cultivation.of(player);
+                if (cultivator == null) continue;
+
+                Meridian weakest = null;
+                float lowest = Float.MAX_VALUE;
+                for (Meridian meridian : Meridian.VALUES) {
+                    if (cultivator.isOpen(meridian)) continue;
+                    float progress = cultivator.meridianProgress(meridian);
+                    if (progress < lowest) {
+                        lowest = progress;
+                        weakest = meridian;
+                    }
+                }
+                if (weakest != null) {
+                    Cultivation.practise(player, weakest, 0.3F * strength);
+                }
             }
         }
     },

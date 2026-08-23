@@ -11,6 +11,7 @@ import com.echoesofthepast.qi.QiVisuals;
 import com.echoesofthepast.registry.EOTPTags;
 import com.echoesofthepast.sound.Resonance;
 import com.echoesofthepast.util.Tell;
+import com.echoesofthepast.world.DragonVeins;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,13 +26,15 @@ import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * Heavenly tribulation. The sky takes an interest in anybody stepping past foundation, and it does
- * not aim politely at the cultivator: it strikes the tallest, most conductive thing it can find.
+ * Heaven's Contradiction. Rather than throwing progressively more lightning at a health bar, the
+ * formation reads what the cultivator claims to understand and argues with that claim directly: Qi
+ * runs backwards, one phase floods, bells go quiet, echoes replay themselves, returns stop
+ * completing.
  *
- * <p>That is the mechanic worth building around. A cultivator who has set up lightning rods, spirit
- * stones and reservoirs around their formation will watch the bolts land on those instead, and every
- * bolt that lands on a device dumps an enormous amount of Qi into it. Tribulation becomes a power
- * source for anybody willing to plan for it.
+ * <p>Lightning remains the signature trial rather than the whole system. When it is selected the
+ * bolts still seek the tallest conductor first, so rods, bells, banners and spirit stones are
+ * deliberate infrastructure, and a Middle Spirit Stone that takes a routed strike can be quenched
+ * into a High one.
  */
 public final class Tribulation {
     /** Bolts in a full tribulation. */
@@ -42,6 +45,8 @@ public final class Tribulation {
     private static final int SEARCH_RADIUS = 10;
     /** Qi a bolt delivers into whatever it lands on. */
     private static final float BOLT_QI = 400.0F;
+    /** Minimum length of a trial, so a contradiction-only tribulation still has to be endured. */
+    private static final int TRIAL_TICKS = BOLTS * INTERVAL;
 
     private static final Map<UUID, State> RUNNING = new HashMap<>();
 
@@ -49,23 +54,67 @@ public final class Tribulation {
 
     private static final class State {
         private final BlockPos center;
-        private int boltsLeft = BOLTS;
+        private final List<Contradiction> contradictions;
+        private int boltsLeft;
         private int countdown = INTERVAL;
         private int routed;
+        private int elapsed;
 
-        private State(BlockPos center) {
+        private State(BlockPos center, List<Contradiction> contradictions) {
             this.center = center;
+            this.contradictions = contradictions;
+            this.boltsLeft = contradictions.contains(Contradiction.LIGHTNING) ? BOLTS : 0;
         }
     }
 
-    public static void begin(ServerLevel level, ServerPlayer player, BlockPos center) {
-        RUNNING.put(player.getUUID(), new State(center));
-        if (EOTPConfig.tribulationBreaksBlocks()) {
+    /**
+     * Heaven reads what the cultivator claims to understand and argues with it specifically. Two or
+     * three contradictions are chosen, weighted toward the systems the player leans on hardest, so a
+     * bell-driven workshop really can be silenced and a Return-shaped cultivator really can be told
+     * that nothing is coming back.
+     */
+    public static void begin(ServerLevel level, ServerPlayer player, BlockPos center, Cultivator cultivator) {
+        List<Contradiction> chosen = choose(level, cultivator);
+        RUNNING.put(player.getUUID(), new State(center, chosen));
+
+        if (chosen.contains(Contradiction.LIGHTNING) && EOTPConfig.tribulationBreaksBlocks()) {
             level.getServer().setWeatherParameters(0, BOLTS * INTERVAL + 200, true, true);
         }
+
         Tell.chat(player, Component.translatable("eotp.message.tribulation_gathers"));
+        for (Contradiction contradiction : chosen) {
+            Tell.chat(player, Component.translatable("eotp.message.contradiction_named",
+                Component.translatable(contradiction.translationKey())));
+        }
         EchoLog.record(level, center, EchoLog.Kind.RITUAL,
             Component.translatable("eotp.echo.tribulation", player.getName()));
+    }
+
+    /** Picks the contradictions most relevant to this cultivator, with a little chance mixed in. */
+    private static List<Contradiction> choose(ServerLevel level, Cultivator cultivator) {
+        List<Contradiction> ordered = new ArrayList<>(List.of(Contradiction.VALUES));
+        ordered.sort((a, b) -> Float.compare(
+            b.relevanceTo(cultivator) + level.getRandom().nextFloat() * 0.5F,
+            a.relevanceTo(cultivator) + level.getRandom().nextFloat() * 0.5F
+        ));
+
+        List<Contradiction> chosen = new ArrayList<>(ordered.subList(0, 2));
+        // Lightning is the signature trial; it shows up often but is no longer the whole system.
+        if (!chosen.contains(Contradiction.LIGHTNING) && level.getRandom().nextFloat() < 0.6F) {
+            chosen.add(Contradiction.LIGHTNING);
+        }
+        return List.copyOf(chosen);
+    }
+
+    /** Which contradictions are currently being enforced against this player. */
+    public static List<Contradiction> activeFor(ServerPlayer player) {
+        State state = RUNNING.get(player.getUUID());
+        return state == null ? List.of() : state.contradictions;
+    }
+
+    /** Used by devices to ask whether Heaven is currently arguing with them. */
+    public static boolean isEnforcing(ServerPlayer player, Contradiction contradiction) {
+        return activeFor(player).contains(contradiction);
     }
 
     public static boolean isRunning(ServerPlayer player) {
@@ -77,28 +126,105 @@ public final class Tribulation {
         State state = RUNNING.get(player.getUUID());
         if (state == null) return;
         ServerLevel level = player.level();
+        state.elapsed++;
 
-        if (--state.countdown > 0) {
-            if (state.countdown % 10 == 0) {
-                QiVisuals.line(level,
-                    Vec3.atCenterOf(state.center).add(0.0, 12.0, 0.0),
-                    Vec3.atCenterOf(state.center).add(0.0, 3.0, 0.0),
-                    0xBFD4F5, 2);
-            }
-            return;
+        if (state.elapsed % 20 == 0) {
+            enforce(level, player, state);
         }
-        state.countdown = INTERVAL;
 
-        BlockPos target = chooseTarget(level, state.center, player);
-        strike(level, player, target, state);
+        if (state.boltsLeft > 0) {
+            if (--state.countdown > 0) {
+                if (state.countdown % 10 == 0) {
+                    QiVisuals.line(level,
+                        Vec3.atCenterOf(state.center).add(0.0, 12.0, 0.0),
+                        Vec3.atCenterOf(state.center).add(0.0, 3.0, 0.0),
+                        0xBFD4F5, 2);
+                }
+                return;
+            }
+            state.countdown = INTERVAL;
+            strike(level, player, chooseTarget(level, state.center, player), state);
+            state.boltsLeft--;
+        }
 
-        if (--state.boltsLeft <= 0) {
-            RUNNING.remove(player.getUUID());
-            Tell.chat(player, Component.translatable("eotp.message.tribulation_passes", state.routed));
-            if (state.routed >= 3) {
-                Cultivation.teach(player, Discovery.TRIBULATION_ROUTING);
+        boolean lightningDone = state.boltsLeft <= 0;
+        boolean enduredLongEnough = state.elapsed >= TRIAL_TICKS;
+        if (!lightningDone || !enduredLongEnough) return;
+
+        RUNNING.remove(player.getUUID());
+        Cultivator cultivator = Cultivation.of(player);
+        if (cultivator != null) {
+            cultivator.path().noteSurvivedTribulation();
+            awardScar(player, cultivator, state);
+            CultivationStore.touch(player);
+        }
+
+        Tell.chat(player, Component.translatable("eotp.message.tribulation_passes", state.routed));
+        if (state.routed >= 3) {
+            Cultivation.teach(player, Discovery.TRIBULATION_ROUTING);
+        }
+    }
+
+    /**
+     * Applies the non-lightning contradictions. Each one attacks the system the cultivator has been
+     * relying on rather than their health.
+     */
+    private static void enforce(ServerLevel level, ServerPlayer player, State state) {
+        for (Contradiction contradiction : state.contradictions) {
+            switch (contradiction) {
+                case REVERSAL -> reverseNearbyQi(level, state.center);
+                case EXCESS -> floodNearbyPhase(level, state.center);
+                case WITHERING -> QiVisuals.leak(level, state.center, PhaseBlend.of(Phase.WOOD), 1.0F);
+                case SILENCE, FRACTURE, FALSE_ECHO, RETURN_DENIED ->
+                    QiVisuals.echo(level, Vec3.atCenterOf(state.center).add(0.0, 1.0, 0.0), 3);
+                case LIGHTNING -> { }
             }
         }
+    }
+
+    /** Reversal: stored Qi is pushed back the way it came and roughened. */
+    private static void reverseNearbyQi(ServerLevel level, BlockPos center) {
+        for (BlockPos pos : BlockPos.betweenClosed(center.offset(-6, -3, -6), center.offset(6, 3, 6))) {
+            QiNode node = QiNet.nodeAt(level, pos);
+            if (node == null) continue;
+            QiStorage storage = node.qiStorage(null);
+            if (storage == null || storage.isEmpty()) continue;
+            storage.addTurbulence(0.05F);
+        }
+    }
+
+    /** Excess: one phase floods everything nearby and has to be spent or converted away. */
+    private static void floodNearbyPhase(ServerLevel level, BlockPos center) {
+        Phase flooded = DragonVeins.phaseOf(level, center);
+        for (BlockPos pos : BlockPos.betweenClosed(center.offset(-6, -3, -6), center.offset(6, 3, 6))) {
+            QiNode node = QiNet.nodeAt(level, pos);
+            if (node == null) continue;
+            QiStorage storage = node.qiStorage(null);
+            if (storage == null) continue;
+            storage.insert(6.0F, PhaseBlend.of(flooded), false);
+        }
+    }
+
+    /** Protecting a living Landscape through Heaven's argument leaves a permanent mark on it. */
+    private static void awardScar(ServerPlayer player, Cultivator cultivator, State state) {
+        if (cultivator.path().landscape() == null) return;
+
+        HeavenScar scar = null;
+        for (Contradiction contradiction : state.contradictions) {
+            scar = switch (contradiction) {
+                case LIGHTNING -> HeavenScar.LIGHTNING;
+                case WITHERING -> HeavenScar.DROUGHT;
+                case REVERSAL -> HeavenScar.REVERSAL;
+                case EXCESS -> HeavenScar.ASH;
+                default -> scar;
+            };
+            if (scar != null) break;
+        }
+        if (scar == null) return;
+
+        cultivator.path().addScar(scar);
+        Tell.chat(player, Component.translatable("eotp.message.scar_earned",
+            Component.translatable(scar.translationKey())));
     }
 
     /**
@@ -138,6 +264,12 @@ public final class Tribulation {
             level.addFreshEntity(bolt);
         }
         Resonance.emit(level, target, Resonance.Tone.THUNDER, 60.0F);
+
+        // A Middle stone left tempering in a struck disc takes the charge and can then be quenched.
+        if (level.getBlockEntity(target) instanceof com.echoesofthepast.block.qi.JadeBiReservoirBlockEntity reservoir) {
+            reservoir.takeTribulationStrike(level.getGameTime());
+            Tell.overlay(player, "eotp.message.stone_charged");
+        }
 
         QiNode node = QiNet.nodeAt(level, target);
         if (node != null) {

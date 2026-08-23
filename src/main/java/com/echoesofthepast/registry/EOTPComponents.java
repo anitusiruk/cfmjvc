@@ -2,12 +2,14 @@ package com.echoesofthepast.registry;
 
 import com.echoesofthepast.EchoesOfThePast;
 import com.echoesofthepast.alchemy.PillQuality;
+import com.echoesofthepast.cultivation.Verse;
 import com.echoesofthepast.ink.InkType;
 import com.echoesofthepast.qi.Phase;
 import com.echoesofthepast.qi.QiCharge;
 import com.echoesofthepast.seal.SealRule;
 import com.echoesofthepast.sword.SwordIntentData;
 import com.mojang.serialization.Codec;
+import java.util.List;
 import java.util.UUID;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.component.DataComponentType;
@@ -64,6 +66,22 @@ public final class EOTPComponents {
     /** The teaching written on an echo scroll, as a discovery id. */
     public static final RegistryObject<DataComponentType<String>> TEACHING =
         register("teaching", Codec.STRING);
+
+    /** Principles a scroll intends to prove together, before the world has confirmed them. */
+    public static final RegistryObject<DataComponentType<Verse>> DRAFT_VERSE =
+        register("draft_verse", Verse.CODEC);
+
+    /** A relationship the world has actually watched hold true. */
+    public static final RegistryObject<DataComponentType<Verse>> MASTERED_VERSE =
+        register("mastered_verse", Verse.CODEC);
+
+    /** Phases a Low Spirit Stone has carried, which is what tempers it into a Middle stone. */
+    public static final RegistryObject<DataComponentType<List<Phase>>> PHASE_HISTORY =
+        register("phase_history", Phase.CODEC.listOf());
+
+    /** Set on a Middle stone the moment tribulation lightning passes through it. */
+    public static final RegistryObject<DataComponentType<Integer>> TRIBULATION_CHARGE =
+        register("tribulation_charge", Codec.INT);
 
     /** Charges left in a talisman before the paper is spent. */
     public static final RegistryObject<DataComponentType<Integer>> CHARGES =

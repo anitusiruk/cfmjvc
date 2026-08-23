@@ -25,8 +25,12 @@ public class MoonLotusBlockEntity extends QiDeviceBlockEntity implements Imprint
     private static final float GATHER_RATE = 0.9F;
     /** Qi that must pass through the flower before it sets another petal. */
     private static final float PETAL_COST = 120.0F;
+    /** Qi a single night must yield for the cycle to count as a complete one. */
+    private static final float CYCLE_PRODUCTION = 60.0F;
 
     private float towardsPetal;
+    /** Qi gathered since the flower last opened, reset at each dusk and dawn. */
+    private float nightProduction;
 
     public MoonLotusBlockEntity(BlockPos pos, BlockState state) {
         super(EOTPBlockEntities.MOON_LOTUS.get(), pos, state, 90.0F);
@@ -47,7 +51,22 @@ public class MoonLotusBlockEntity extends QiDeviceBlockEntity implements Imprint
             level.setBlockAndUpdate(this.worldPosition, state.setValue(MoonLotusBlock.OPEN, shouldBeOpen));
             state = this.getBlockState();
             if (shouldBeOpen) {
+                this.nightProduction = 0.0F;
                 QiVisuals.bloom(level, net.minecraft.world.phys.Vec3.atCenterOf(this.worldPosition), PhaseBlend.of(Phase.WATER));
+            } else {
+                // Closing at dawn after a productive night, still plumbed into something, is a whole
+                // spiritual cycle: the Witness of Heaven for any mortal who watched it happen.
+                boolean connected = false;
+                for (net.minecraft.core.Direction side : net.minecraft.core.Direction.values()) {
+                    if (QiNet.nodeAt(level, this.worldPosition.relative(side)) != null) {
+                        connected = true;
+                        break;
+                    }
+                }
+                if (connected && this.nightProduction >= CYCLE_PRODUCTION) {
+                    com.echoesofthepast.cultivation.Witnesses.completeHeaven(level, this.worldPosition);
+                }
+                this.nightProduction = 0.0F;
             }
         }
         if (!shouldBeOpen) return;
@@ -58,6 +77,7 @@ public class MoonLotusBlockEntity extends QiDeviceBlockEntity implements Imprint
         float gathered = GATHER_RATE * (1.0F + level.getMoonBrightness(this.worldPosition)) * springMultiplier;
         this.storage.insert(gathered, PhaseBlend.of(Phase.WATER), false);
         this.towardsPetal += gathered;
+        this.nightProduction += gathered;
 
         if (this.towardsPetal >= PETAL_COST) {
             this.towardsPetal = 0.0F;
@@ -95,11 +115,13 @@ public class MoonLotusBlockEntity extends QiDeviceBlockEntity implements Imprint
     protected void saveAdditional(net.minecraft.world.level.storage.ValueOutput output) {
         super.saveAdditional(output);
         output.putFloat("towards_petal", this.towardsPetal);
+        output.putFloat("night_production", this.nightProduction);
     }
 
     @Override
     protected void loadAdditional(net.minecraft.world.level.storage.ValueInput input) {
         super.loadAdditional(input);
         this.towardsPetal = input.getFloatOr("towards_petal", 0.0F);
+        this.nightProduction = input.getFloatOr("night_production", 0.0F);
     }
 }

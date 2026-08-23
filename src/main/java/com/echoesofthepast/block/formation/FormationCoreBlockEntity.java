@@ -49,6 +49,8 @@ public class FormationCoreBlockEntity extends QiDeviceBlockEntity implements QiP
     private @Nullable FormationType type;
     private @Nullable UUID owner;
     private float strength;
+    /** Why the last reading failed, so the core can point at the clause rather than shrug. */
+    private @Nullable String failure;
 
     public FormationCoreBlockEntity(BlockPos pos, BlockState state) {
         super(EOTPBlockEntities.FORMATION_CORE.get(), pos, state, 240.0F);
@@ -84,7 +86,9 @@ public class FormationCoreBlockEntity extends QiDeviceBlockEntity implements QiP
     protected void deviceTick(ServerLevel level) {
         if (this.age % RESURVEY_INTERVAL == 0 || this.survey == null) {
             this.survey = FormationSurvey.scan(level, this.worldPosition);
-            this.type = FormationType.identify(this.survey);
+            FormationType.Reading reading = FormationType.read(this.survey);
+            this.type = reading.type();
+            this.failure = reading.failure();
             // A bigger, better conducting circuit holds more Qi, which is the real reward for
             // building something elaborate.
             this.storage.setCapacityMultiplier(1.0F + this.survey.conductance() * 0.05F);
@@ -173,10 +177,11 @@ public class FormationCoreBlockEntity extends QiDeviceBlockEntity implements QiP
                 }
             }
             case CULTIVATION -> {
-                if (this.age % 20 != 0) return;
-                for (Player player : level.getEntitiesOfClass(Player.class, area)) {
-                    if (player.getDeltaMovement().horizontalDistanceSqr() > 1.0E-4) continue;
-                    Cultivation.insight(player, 0.4F * this.strength);
+                // A cultivation statement no longer hands out progress for sitting in it. It holds
+                // a ritual steady, which is read by whichever ritual is actually running here.
+                if (this.age % 20 == 0) {
+                    QiVisuals.ring(level, Vec3.atCenterOf(this.worldPosition).add(0.0, 0.4, 0.0),
+                        survey.radius() * 0.6, PhaseBlend.BALANCED.color(), 12);
                 }
             }
             case PRESERVATION -> {
@@ -199,16 +204,21 @@ public class FormationCoreBlockEntity extends QiDeviceBlockEntity implements QiP
         if (!(this.level instanceof ServerLevel level)) return;
         this.owner = player.getUUID();
         this.survey = FormationSurvey.scan(level, this.worldPosition);
-        this.type = FormationType.identify(this.survey);
+        FormationType.Reading reading = FormationType.read(this.survey);
+        this.type = reading.type();
+        this.failure = reading.failure();
         this.setChanged();
 
         FormationSurvey current = this.survey;
         if (this.type == null) {
+            // Say which clause fails, not simply that the shape is wrong.
             if (current.closed()) {
                 Cultivation.teach(player, Discovery.FORMATION_BASICS);
             }
-            Tell.chat(player, Component.translatable("eotp.message.formation_incomplete",
-                current.size(), current.closed() ? 1 : 0));
+            Tell.chat(player, Component.translatable("eotp.message.reading_failed",
+                Component.translatable(this.failure == null ? "eotp.reading.nothing_written" : this.failure)));
+            Tell.chat(player, Component.translatable("eotp.message.reading_detail",
+                current.size(), current.clauses(), current.trigrams(), current.inkPhases().size()));
             return;
         }
 

@@ -41,27 +41,34 @@ public final class Cultivation {
         return true;
     }
 
-    /** Practice towards opening a channel, announcing the moment it gives way. */
+    /**
+     * Practice towards opening a channel, announcing the moment it gives way. Practice accrues even
+     * for a mortal who cannot open anything yet, so nothing done early is wasted, and enough of it
+     * in any one channel is the Witness of Self.
+     */
     public static void practise(Player player, Meridian meridian, float amount) {
         Cultivator cultivator = of(player);
         if (cultivator == null) return;
         if (cultivator.practise(meridian, amount)) {
             Tell.chat(player, Component.translatable("eotp.message.meridian_opened",
                 Component.translatable(meridian.translationKey())));
+            checkReadiness(player);
+        }
+        if (player instanceof ServerPlayer serverPlayer) {
+            Witnesses.checkSelf(serverPlayer, cultivator);
         }
         CultivationStore.touch(player);
     }
 
-    public static void insight(Player player, float amount) {
+    /**
+     * Announces when the next realm has become attemptable. There is no bar being filled here: each
+     * realm asks for a different proof, and this only reports that the proof is now in hand.
+     */
+    public static void checkReadiness(Player player) {
         Cultivator cultivator = of(player);
-        if (cultivator == null) return;
-        boolean wasReady = cultivator.readyToBreakThrough();
-        cultivator.addInsight(amount);
-        if (!wasReady && cultivator.readyToBreakThrough()) {
-            Tell.chat(player, Component.translatable("eotp.message.breakthrough_ready",
-                Component.translatable(cultivator.realm().next().translationKey())));
-        }
-        CultivationStore.touch(player);
+        if (cultivator == null || !cultivator.readyToBreakThrough()) return;
+        Tell.chat(player, Component.translatable("eotp.message.breakthrough_ready",
+            Component.translatable(cultivator.realm().next().translationKey())));
     }
 
     public static void grantQi(Player player, float amount, PhaseBlend blend) {
@@ -91,14 +98,20 @@ public final class Cultivation {
     public static Component describe(ServerPlayer player) {
         Cultivator cultivator = of(player);
         if (cultivator == null) return Component.empty();
+        SelfScript script = cultivator.path().selfScript();
+        CoreThesis thesis = cultivator.path().thesis();
+        InnerLandscape landscape = cultivator.path().landscape();
+
         return Component.translatable(
             "eotp.message.cultivation_status",
             Component.translatable(cultivator.realm().translationKey()),
-            Math.round(cultivator.realmProgress() * 100.0F),
             Math.round(cultivator.qi()),
             Math.round(cultivator.qiCapacity()),
-            cultivator.root().describe(),
-            cultivator.openMeridianCount()
+            cultivator.openMeridianCount(),
+            script == null ? Component.translatable("eotp.message.none") : script.describe(),
+            thesis == null ? Component.translatable("eotp.message.none") : Component.translatable(thesis.translationKey()),
+            landscape == null ? Component.translatable("eotp.message.none") : landscape.name(),
+            cultivator.path().masteredVerses().size()
         );
     }
 }

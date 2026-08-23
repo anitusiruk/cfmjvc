@@ -8,12 +8,15 @@ import com.echoesofthepast.block.qi.BaguaDistributorBlockEntity;
 import com.echoesofthepast.block.qi.BronzeSpiritBellBlockEntity;
 import com.echoesofthepast.block.qi.ConversionWheelBlockEntity;
 import com.echoesofthepast.channel.SealChannels;
+import com.echoesofthepast.cultivation.Tendencies;
+import com.echoesofthepast.cultivation.Tendency;
 import com.echoesofthepast.echo.EchoLog;
 import com.echoesofthepast.imprint.ImprintAction;
 import com.echoesofthepast.imprint.ImprintTarget;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -43,6 +46,10 @@ public final class EchoEvents {
                 event.getState().getBlock().getName(), event.getPlayer().getName()));
         // A stamped container that gets broken should stop attracting cranes.
         SealChannels.clear(level, pos);
+
+        if (event.getPlayer() instanceof ServerPlayer player) {
+            Tendencies.note(player, Tendency.CUTTING, 0.05F);
+        }
     }
 
     private static void onPlace(BlockEvent.EntityPlaceEvent event) {
@@ -51,12 +58,21 @@ public final class EchoEvents {
         EchoLog.record(level, event.getPos(), EchoLog.Kind.BLOCK_PLACED,
             Component.translatable("eotp.echo.placed",
                 event.getPlacedBlock().getBlock().getName(), player.getName()));
+
+        if (player instanceof ServerPlayer serverPlayer) {
+            Tendencies.note(serverPlayer, Tendency.CREATING, 0.05F);
+        }
     }
 
     private static void onDeath(LivingDeathEvent event) {
         if (!(event.getEntity().level() instanceof ServerLevel level)) return;
         EchoLog.record(level, event.getEntity().blockPosition(), EchoLog.Kind.DEATH,
             Component.translatable("eotp.echo.died", event.getEntity().getName()));
+
+        // Somebody surviving what killed something else is enduring; the killer is cutting.
+        if (event.getSource().getEntity() instanceof ServerPlayer killer) {
+            Tendencies.note(killer, Tendency.CUTTING, 0.2F);
+        }
     }
 
     /**
@@ -84,6 +100,17 @@ public final class EchoEvents {
 
         for (AncestralTabletBlockEntity tablet : AncestralTabletBlockEntity.watching(level, pos)) {
             tablet.observe(pos, action);
+        }
+
+        // Working a device by hand is the world watching you tend, transform or command something.
+        if (player instanceof ServerPlayer serverPlayer) {
+            Tendency tendency = switch (action) {
+                case FEED, STIR -> Tendency.TENDING;
+                case TURN -> Tendency.TRANSFORMING;
+                case STRIKE -> Tendency.COMMANDING;
+                case HARVEST -> Tendency.CREATING;
+            };
+            Tendencies.note(serverPlayer, tendency, 0.15F);
         }
     }
 

@@ -4,6 +4,7 @@ import com.echoesofthepast.EchoesOfThePast;
 import com.echoesofthepast.block.alchemy.DingCauldronBlock;
 import com.echoesofthepast.block.craft.HerbDryingRackBlock;
 import com.echoesofthepast.block.echo.AncestralTabletBlock;
+import com.echoesofthepast.block.landscape.LandscapeSteleBlock;
 import com.echoesofthepast.block.plant.EarthrootGinsengBlock;
 import com.echoesofthepast.block.plant.LingzhiFungusBlock;
 import com.echoesofthepast.block.plant.MoonLotusBlock;
@@ -178,6 +179,12 @@ public final class EOTPBlocks {
             () -> BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(2.0F, 4.0F)
                 .sound(SoundType.STONE).noOcclusion().requiresCorrectToolForDrops()
                 .lightLevel(state -> state.getValue(AncestralTabletBlock.AWAKENED) ? 7 : 0));
+
+    /** Raised at the heart of an Attunement Formation to begin cultivating an Inner Landscape. */
+    public static final RegistryObject<Block> LANDSCAPE_STELE =
+        register("landscape_stele", LandscapeSteleBlock::new,
+            () -> jade().noOcclusion()
+                .lightLevel(state -> state.getValue(LandscapeSteleBlock.MATURE) ? 9 : 0));
 
     // ---------------------------------------------------------------------------- growing things
 

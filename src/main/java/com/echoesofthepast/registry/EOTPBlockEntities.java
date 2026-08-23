@@ -7,6 +7,7 @@ import com.echoesofthepast.block.craft.IncenseCenserBlockEntity;
 import com.echoesofthepast.block.craft.InkstoneBlockEntity;
 import com.echoesofthepast.block.craft.SealCarvingTableBlockEntity;
 import com.echoesofthepast.block.echo.AncestralTabletBlockEntity;
+import com.echoesofthepast.block.landscape.LandscapeSteleBlockEntity;
 import com.echoesofthepast.block.plant.LingzhiFungusBlockEntity;
 import com.echoesofthepast.block.plant.MoonLotusBlockEntity;
 import com.echoesofthepast.block.qi.SpiritStoneBlockEntity;
@@ -124,6 +125,10 @@ public final class EOTPBlockEntities {
                 EOTPBlocks.LOW_SPIRIT_STONE_BLOCK.get(),
                 EOTPBlocks.MIDDLE_SPIRIT_STONE_BLOCK.get(),
                 EOTPBlocks.HIGH_SPIRIT_STONE_BLOCK.get())));
+
+    public static final RegistryObject<BlockEntityType<LandscapeSteleBlockEntity>> LANDSCAPE_STELE =
+        BLOCK_ENTITIES.register("landscape_stele", () -> new BlockEntityType<>(
+            LandscapeSteleBlockEntity::new, Set.of(EOTPBlocks.LANDSCAPE_STELE.get())));
 
     public static void register(BusGroup modBus) {
         BLOCK_ENTITIES.register(modBus);

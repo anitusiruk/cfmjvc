@@ -21,7 +21,7 @@ import org.jspecify.annotations.Nullable;
 public final class Cultivator {
     public static final Codec<Cultivator> CODEC = RecordCodecBuilder.create(instance -> instance.group(
         Realm.CODEC.optionalFieldOf("realm", Realm.MORTAL).forGetter(c -> c.realm),
-        Codec.FLOAT.optionalFieldOf("insight", 0.0F).forGetter(c -> c.insight),
+        CultivationPath.CODEC.optionalFieldOf("path", new CultivationPath()).forGetter(c -> c.path),
         SpiritualRoot.CODEC.optionalFieldOf("root", SpiritualRoot.NONE).forGetter(c -> c.root),
         Codec.unboundedMap(Meridian.CODEC, Codec.FLOAT).optionalFieldOf("meridians", Map.of()).forGetter(c -> c.meridianEffort),
         Codec.FLOAT.optionalFieldOf("qi", 0.0F).forGetter(c -> c.qi),
@@ -37,7 +37,8 @@ public final class Cultivator {
     ).apply(instance, Cultivator::new));
 
     private Realm realm;
-    private float insight;
+    /** Everything the cultivator has proven rather than accumulated. */
+    private final CultivationPath path;
     private SpiritualRoot root;
     private final Map<Meridian, Float> meridianEffort;
     private float qi;
@@ -52,13 +53,13 @@ public final class Cultivator {
     private int cloudstepsUsed;
 
     public Cultivator() {
-        this(Realm.MORTAL, 0.0F, SpiritualRoot.NONE, Map.of(), 0.0F, PhaseBlend.EMPTY, false, 0,
+        this(Realm.MORTAL, new CultivationPath(), SpiritualRoot.NONE, Map.of(), 0.0F, PhaseBlend.EMPTY, false, 0,
             Map.of(), java.util.List.of(), java.util.Optional.empty(), 0, 0, 0);
     }
 
     private Cultivator(
         Realm realm,
-        float insight,
+        CultivationPath path,
         SpiritualRoot root,
         Map<Meridian, Float> meridianEffort,
         float qi,
@@ -73,7 +74,7 @@ public final class Cultivator {
         int cloudstepsUsed
     ) {
         this.realm = realm;
-        this.insight = insight;
+        this.path = path;
         this.root = root;
         this.meridianEffort = new EnumMap<>(Meridian.class);
         this.meridianEffort.putAll(meridianEffort);
@@ -95,35 +96,39 @@ public final class Cultivator {
         return this.realm;
     }
 
-    public float insight() {
-        return this.insight;
+    /** Everything this cultivator has demonstrated: Witnesses, Script, Verses, Thesis, Landscape. */
+    public CultivationPath path() {
+        return this.path;
     }
 
-    /** Insight is earned by doing magical work, not by waiting. */
-    public void addInsight(float amount) {
-        this.insight = Math.max(0.0F, this.insight + amount * (float) EOTPConfig.cultivationRate());
-    }
-
+    /**
+     * Whether the next realm can be attempted at all. There is no bar to fill: each realm asks for a
+     * different kind of proof, and the ritual itself is where that proof gets tested.
+     */
     public boolean readyToBreakThrough() {
-        return this.insight >= this.realm.insightRequired();
-    }
-
-    /** Fraction of the way to the next realm, which is all the player ever needs to see. */
-    public float realmProgress() {
-        float required = this.realm.insightRequired();
-        return required == Float.MAX_VALUE ? 1.0F : Mth.clamp(this.insight / required, 0.0F, 1.0F);
+        return switch (this.realm) {
+            case MORTAL -> this.path.hasAllWitnesses();
+            // Foundation reads the tendencies the world has already filed; it needs enough of them.
+            case BREATH_GATHERING -> this.path.strongestTendencies(3).size() >= 3;
+            case FOUNDATION -> this.path.masteredVerses().size() >= 3;
+            case GOLDEN_CORE -> this.path.readyForNascentSpirit(this.openMeridianCount());
+            case NASCENT_SPIRIT -> false;
+        };
     }
 
     public void advanceRealm() {
         this.realm = this.realm.next();
-        this.insight = 0.0F;
         if (this.realm == Realm.GOLDEN_CORE) {
             this.coreFormed = true;
         }
     }
 
-    public void loseProgress(float fraction) {
-        this.insight *= Mth.clamp(1.0F - fraction, 0.0F, 1.0F);
+    /**
+     * A collapsed ritual leaves Discord on whichever principle was failing, rather than deleting
+     * progress the player earned by demonstration.
+     */
+    public void recordDiscord(Principle principle) {
+        this.path.addDiscord(principle);
         this.failedBreakthroughs++;
     }
 
@@ -133,6 +138,7 @@ public final class Cultivator {
 
     public void forgiveFailure() {
         this.failedBreakthroughs = Math.max(0, this.failedBreakthroughs - 1);
+        this.path.suppressOneDiscord();
     }
 
     // ------------------------------------------------------------------------------------- roots
@@ -155,11 +161,19 @@ public final class Cultivator {
      * Practising the thing a meridian governs. Returns true if this was the push that opened it.
      */
     public boolean practise(Meridian meridian, float amount) {
-        if (this.isOpen(meridian)) return false;
+        boolean wasOpen = this.isOpen(meridian);
         float before = this.meridianEffort(meridian);
         float after = before + amount * (float) EOTPConfig.cultivationRate();
         this.meridianEffort.put(meridian, after);
-        return before < meridian.effortRequired() && after >= meridian.effortRequired();
+        return !wasOpen && this.isOpen(meridian);
+    }
+
+    /** True once any one channel has had real work put into it: the Witness of Self. */
+    public boolean hasSubstantialPractice() {
+        for (Meridian meridian : Meridian.VALUES) {
+            if (this.meridianEffort(meridian) >= meridian.effortRequired() * 0.6F) return true;
+        }
+        return false;
     }
 
     /** Forces a meridian the rest of the way open, as a meridian-opening pill does. */
@@ -167,8 +181,31 @@ public final class Cultivator {
         this.meridianEffort.put(meridian, meridian.effortRequired());
     }
 
+    /**
+     * A channel opens once it has been practised enough, but never before the body can hold Qi at
+     * all. Mortals still accumulate practice, so nothing done before Breath Gathering is wasted.
+     */
     public boolean isOpen(Meridian meridian) {
-        return this.meridianEffort(meridian) >= meridian.effortRequired();
+        if (this.realm == Realm.MORTAL) return false;
+        if (this.meridianEffort(meridian) < meridian.effortRequired()) return false;
+        // The lower field is not a sixth skill: it is what the other channels add up to.
+        if (meridian == Meridian.DANTIAN && this.practisedChannelCount() < 3) return false;
+        return true;
+    }
+
+    /** How many other channels have meaningful practice in them, which is what Dantian asks for. */
+    public int practisedChannelCount() {
+        int count = 0;
+        for (Meridian meridian : Meridian.VALUES) {
+            if (meridian == Meridian.DANTIAN) continue;
+            if (this.meridianEffort(meridian) >= meridian.effortRequired() * 0.5F) count++;
+        }
+        return count;
+    }
+
+    /** Progress toward a channel, for the compass and the ritual glyphs. */
+    public float meridianProgress(Meridian meridian) {
+        return Mth.clamp(this.meridianEffort(meridian) / meridian.effortRequired(), 0.0F, 1.0F);
     }
 
     /** An open meridian that has been needled shut is not usable, but its Qi goes elsewhere. */
@@ -212,7 +249,24 @@ public final class Cultivator {
         if (sealed != null && sealed != meridian && this.isOpen(sealed)) {
             base += 0.35F;
         }
-        return base * this.root.powerMultiplier();
+        // A Landscape whose relationship suits the channel makes its techniques land harder, and a
+        // Core Thesis about the same principle pushes them further still.
+        InnerLandscape landscape = this.path.landscape();
+        if (landscape != null) {
+            base *= switch (meridian) {
+                case HAND -> landscape.returnBonus();
+                case FOOT -> landscape.growthBonus();
+                case HEART -> landscape.stabilityBonus();
+                case CROWN, DANTIAN -> landscape.transformationBonus();
+            };
+        } else {
+            base *= this.root.powerMultiplier();
+        }
+        // Outstanding Discord makes everything run rough until the principle is demonstrated again.
+        if (this.path.hasDiscord()) {
+            base *= 1.0F - Math.min(0.4F, this.path.discord().size() * 0.15F);
+        }
+        return base;
     }
 
     // ------------------------------------------------------------------------------- personal qi
@@ -234,7 +288,23 @@ public final class Cultivator {
     }
 
     public PhaseBlend qiBlend() {
-        return this.qiBlend.isEmpty() ? this.root.blend() : this.qiBlend;
+        return this.qiBlend.isEmpty() ? this.naturalBlend() : this.qiBlend;
+    }
+
+    /**
+     * The character of Qi this body makes on its own. An imprinted Landscape speaks first: affinity
+     * is supposed to be the memory of a place that was actually cultivated.
+     */
+    public PhaseBlend naturalBlend() {
+        InnerLandscape landscape = this.path.landscape();
+        if (landscape != null) return landscape.blend();
+        return this.root.blend();
+    }
+
+    /** How well this body takes in an arriving phase. */
+    public float affinityWith(Phase phase) {
+        InnerLandscape landscape = this.path.landscape();
+        return landscape != null ? landscape.affinityWith(phase) : this.root.affinityWith(phase);
     }
 
     public float addQi(float amount, PhaseBlend flavour) {
@@ -242,7 +312,7 @@ public final class Cultivator {
         float efficiency = 1.0F;
         Phase dominant = flavour.dominant();
         if (dominant != null) {
-            efficiency = this.root.affinityWith(dominant);
+            efficiency = this.affinityWith(dominant);
         }
         float gained = Math.min(amount * efficiency, capacity - this.qi);
         if (gained <= 0.0F) return 0.0F;
@@ -269,7 +339,7 @@ public final class Cultivator {
         rate *= 1.0F + ambient;
         rate *= (float) EOTPConfig.qiRegenRate();
         if (this.coreInstability > 0) rate *= 0.4F;
-        this.addQi(rate, this.root.blend());
+        this.addQi(rate, this.naturalBlend());
     }
 
     /** Without a core, Qi held in the body seeps away when the cultivator is not concentrating. */

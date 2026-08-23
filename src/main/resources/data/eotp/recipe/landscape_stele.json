@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "J": "eotp:raw_jade",
+    "S": "eotp:high_spirit_stone",
+    "E": "eotp:echo_essence"
+  },
+  "pattern": [
+    "JEJ",
+    "JSJ",
+    "JJJ"
+  ],
+  "result": {
+    "id": "eotp:landscape_stele"
+  }
+}
