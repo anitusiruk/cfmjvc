@@ -1,5 +1,6 @@
 package com.echoesofthepast.block.plant;
 
+import com.echoesofthepast.fluid.SpiritSpringEffects;
 import com.echoesofthepast.registry.EOTPBlocks;
 import com.echoesofthepast.world.DragonVeins;
 import net.minecraft.core.BlockPos;
@@ -89,7 +90,7 @@ public class SpiritBambooBlock extends Block {
 
     /** Qi that a gathering formation or a charged reservoir is spilling into the soil. */
     private float formationSupport(ServerLevel level, BlockPos pos) {
-        float support = 0.0F;
+        float support = SpiritSpringEffects.nearby(level, pos, 2) ? 0.45F : 0.0F;
         for (BlockPos nearby : BlockPos.betweenClosed(pos.offset(-3, -2, -3), pos.offset(3, 2, 3))) {
             var node = com.echoesofthepast.qi.QiNet.nodeAt(level, nearby);
             if (node == null) continue;

@@ -17,7 +17,8 @@ public class SpiritSpringFluidType extends FluidType {
             .descriptionId("fluid.eotp.spirit_spring_water")
             .fallDistanceModifier(0.0F)
             .canExtinguish(true)
-            .canConvertToSource(true)
+            // Spring sources are precious world finds, not an infinite 2x2-water trick.
+            .canConvertToSource(false)
             .supportsBoating(true)
             .canHydrate(true)
             // Slightly thinner than water: a spring runs quick and bright.

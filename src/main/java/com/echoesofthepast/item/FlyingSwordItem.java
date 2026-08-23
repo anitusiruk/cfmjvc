@@ -127,7 +127,9 @@ public class FlyingSwordItem extends Item {
             return InteractionResult.SUCCESS;
         }
 
-        if (!Cultivation.spend(player, SEND_COST)) return InteractionResult.FAIL;
+        if (!Cultivation.spend(player, SEND_COST * ArmorSets.techniqueCostMultiplier(player))) {
+            return InteractionResult.FAIL;
+        }
 
         FlyingSwordEntity sword = EOTPEntities.FLYING_SWORD.get().create(level, EntitySpawnReason.TRIGGERED);
         if (sword == null) return InteractionResult.FAIL;

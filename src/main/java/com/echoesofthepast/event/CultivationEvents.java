@@ -1,6 +1,7 @@
 package com.echoesofthepast.event;
 
 import com.echoesofthepast.cultivation.BreakthroughRitual;
+import com.echoesofthepast.cultivation.BreathInitiation;
 import com.echoesofthepast.cultivation.Cultivation;
 import com.echoesofthepast.cultivation.CultivationStore;
 import com.echoesofthepast.cultivation.Cultivator;
@@ -8,7 +9,9 @@ import com.echoesofthepast.cultivation.Meridian;
 import com.echoesofthepast.cultivation.Realm;
 import com.echoesofthepast.cultivation.SpiritProjection;
 import com.echoesofthepast.cultivation.Tribulation;
+import com.echoesofthepast.fluid.SpiritSpringEffects;
 import com.echoesofthepast.qi.PhaseBlend;
+import com.echoesofthepast.qi.QiVisuals;
 import com.echoesofthepast.registry.EOTPMobEffects;
 import com.echoesofthepast.util.Tell;
 import com.echoesofthepast.world.DragonVeins;
@@ -43,10 +46,15 @@ public final class CultivationEvents {
         if (!(event.player() instanceof ServerPlayer player)) return;
 
         Cultivator cultivator = Cultivation.of(player);
-        if (cultivator == null || cultivator.realm() == Realm.MORTAL) return;
+        if (cultivator == null) return;
 
         long time = player.level().getGameTime();
         BlockPos pos = player.blockPosition();
+
+        if (cultivator.realm() == Realm.MORTAL) {
+            cultivateFirstBreath(player, cultivator, time, pos);
+            return;
+        }
 
         // Things that have to watch every tick: footwork and lightning.
         MovementEvents.tick(player, event.side());
@@ -59,7 +67,8 @@ public final class CultivationEvents {
                 BreakthroughRitual.tick(player, cultivator);
             }
 
-            float ambient = DragonVeins.ambientQi(player.level(), pos);
+            boolean inSpiritSpring = SpiritSpringEffects.nearby(player.level(), pos, 1);
+            float ambient = DragonVeins.ambientQi(player.level(), pos) + (inSpiritSpring ? 0.55F : 0.0F);
             // Sitting still on a vein is the cheapest cultivation there is, and it looks the part.
             boolean resting = still && !player.isSprinting();
             cultivator.regenerateQi(ambient, resting);
@@ -70,7 +79,7 @@ public final class CultivationEvents {
                 if (DragonVeins.isIntersection(player.level(), pos)) {
                     insight *= 2.0F;
                 }
-                Cultivation.insight(player, insight);
+                Cultivation.insight(player, insight * (inSpiritSpring ? 1.5F : 1.0F));
             }
 
             if (cultivator.coreInstability() > 0) {
@@ -92,6 +101,31 @@ public final class CultivationEvents {
         if (player.onGround()) {
             cultivator.setCloudstepsUsed(0);
         }
+    }
+
+    private static void cultivateFirstBreath(ServerPlayer player, Cultivator cultivator, long time, BlockPos pos) {
+        boolean still = player.getDeltaMovement().horizontalDistanceSqr() < 1.0E-4 && !player.isSprinting();
+        if (time % 20L == 0L && still) {
+            float vein = DragonVeins.strength(player.level(), pos);
+            if (vein >= 0.15F) {
+                float springBonus = SpiritSpringEffects.nearby(player.level(), pos, 1) ? 1.5F : 1.0F;
+                Cultivation.insight(player, (0.12F + vein * 0.28F) * springBonus);
+                if (time % 40L == 0L) {
+                    QiVisuals.ring(
+                        player.level(),
+                        player.position().add(0.0, 0.05, 0.0),
+                        0.45,
+                        DragonVeins.phaseOf(player.level(), pos).color(),
+                        8
+                    );
+                }
+            }
+        }
+
+        if (cultivator.readyToBreakThrough()) {
+            BreathInitiation.tick(player, cultivator);
+        }
+        CultivationStore.touch(player);
     }
 
     private static void onDeath(LivingDeathEvent event) {

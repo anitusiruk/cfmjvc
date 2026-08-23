@@ -1,5 +1,6 @@
 package com.echoesofthepast.block.plant;
 
+import com.echoesofthepast.fluid.SpiritSpringEffects;
 import com.echoesofthepast.registry.EOTPItems;
 import com.echoesofthepast.registry.EOTPTags;
 import java.util.HashSet;
@@ -68,6 +69,9 @@ public class EarthrootGinsengBlock extends Block {
         int variety = this.varietyAround(level, pos);
         // Even a perfect garden is slow. This is the mod's long crop on purpose.
         float chance = 0.02F + 0.10F * Math.min(1.0F, variety / (float) VARIETY_TARGET);
+        if (SpiritSpringEffects.nearby(level, pos, 3)) {
+            chance += 0.06F;
+        }
         if (random.nextFloat() < chance) {
             level.setBlockAndUpdate(pos, state.setValue(AGE, state.getValue(AGE) + 1));
         }

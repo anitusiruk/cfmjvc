@@ -1,6 +1,7 @@
 package com.echoesofthepast.block.qi;
 
 import com.echoesofthepast.block.QiDeviceBlockEntity;
+import com.echoesofthepast.qi.PhaseBlend;
 import com.echoesofthepast.qi.QiNet;
 import com.echoesofthepast.registry.EOTPBlockEntities;
 import net.minecraft.core.BlockPos;
@@ -11,6 +12,9 @@ import net.minecraft.world.level.block.state.BlockState;
 public class SpiritStoneBlockEntity extends QiDeviceBlockEntity {
     public SpiritStoneBlockEntity(BlockPos pos, BlockState state) {
         super(EOTPBlockEntities.SPIRIT_STONE_BLOCK.get(), pos, state, capacityOf(state));
+        // A crafted block is nine refined stones made into one physical battery. Saved block
+        // entities load their persisted Qi over this initial charge; newly placed ones stay full.
+        this.storage.insert(this.storage.capacity(), PhaseBlend.BALANCED, false);
     }
 
     private static float capacityOf(BlockState state) {

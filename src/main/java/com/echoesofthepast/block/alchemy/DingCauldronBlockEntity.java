@@ -62,6 +62,8 @@ public class DingCauldronBlockEntity extends QiDeviceBlockEntity implements Impr
     private int scoreCount;
     private int settleTimer = -1;
     private boolean scorched;
+    /** One Spirit Spring bucket blesses the current/next batch and makes Perfect quality reachable. */
+    private boolean springInfused;
 
     public DingCauldronBlockEntity(BlockPos pos, BlockState state) {
         super(EOTPBlockEntities.DING_CAULDRON.get(), pos, state, 200.0F);
@@ -206,7 +208,11 @@ public class DingCauldronBlockEntity extends QiDeviceBlockEntity implements Impr
         float calm = 1.0F - this.storage.turbulence() * 0.5F;
 
         // Heat and phase matter most; a filthy pot caps the grade no matter how well you cook.
-        float score = (heatScore * 0.4F + phaseScore * 0.35F + calm * 0.1F) * (0.55F + cleanliness * 0.45F);
+        // Ordinary water can make a Refined pill. Spirit Spring supplies the last 15% needed for
+        // Perfect quality, making the rare fluid a process ingredient rather than a reskinned bucket.
+        float spring = this.springInfused ? 0.15F : 0.0F;
+        float score = (heatScore * 0.4F + phaseScore * 0.35F + calm * 0.1F + spring)
+            * (0.55F + cleanliness * 0.45F);
         this.scoreSum += Math.max(0.0F, score);
         this.scoreCount++;
     }
@@ -261,6 +267,7 @@ public class DingCauldronBlockEntity extends QiDeviceBlockEntity implements Impr
         this.scoreCount = 0;
         this.settleTimer = -1;
         this.scorched = false;
+        this.springInfused = false;
         this.setChanged();
     }
 
@@ -297,9 +304,15 @@ public class DingCauldronBlockEntity extends QiDeviceBlockEntity implements Impr
         if (!(this.level instanceof ServerLevel level)) return false;
 
         if (stack.is(Items.WATER_BUCKET) || stack.is(EOTPItems.SPIRIT_SPRING_BUCKET.get())) {
+            boolean spiritSpring = stack.is(EOTPItems.SPIRIT_SPRING_BUCKET.get());
             this.residue = 0.0F;
+            this.springInfused |= spiritSpring;
+            if (!player.getAbilities().instabuild) {
+                stack.shrink(1);
+                player.getInventory().placeItemBackInInventory(new ItemStack(Items.BUCKET));
+            }
             this.setChanged();
-            Tell.overlay(player, "eotp.message.cauldron_cleaned");
+            Tell.overlay(player, spiritSpring ? "eotp.message.cauldron_spring_infused" : "eotp.message.cauldron_cleaned");
             level.playSound(null, this.worldPosition, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 0.8F, 1.0F);
             return true;
         }
@@ -349,6 +362,7 @@ public class DingCauldronBlockEntity extends QiDeviceBlockEntity implements Impr
         output.putInt("score_count", this.scoreCount);
         output.putInt("settle", this.settleTimer);
         output.putBoolean("scorched", this.scorched);
+        output.putBoolean("spring_infused", this.springInfused);
         var list = output.list("added", Identifier.CODEC);
         for (Item item : this.added) {
             list.add(BuiltInRegistries.ITEM.getKey(item));
@@ -364,6 +378,7 @@ public class DingCauldronBlockEntity extends QiDeviceBlockEntity implements Impr
         this.scoreCount = input.getIntOr("score_count", 0);
         this.settleTimer = input.getIntOr("settle", -1);
         this.scorched = input.getBooleanOr("scorched", false);
+        this.springInfused = input.getBooleanOr("spring_infused", false);
         this.added.clear();
         for (Identifier id : input.listOrEmpty("added", Identifier.CODEC)) {
             BuiltInRegistries.ITEM.getOptional(id).ifPresent(this.added::add);

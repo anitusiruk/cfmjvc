@@ -4,6 +4,7 @@ import com.echoesofthepast.block.QiDeviceBlockEntity;
 import com.echoesofthepast.cultivation.Cultivation;
 import com.echoesofthepast.cultivation.Discovery;
 import com.echoesofthepast.registry.EOTPBlockEntities;
+import com.echoesofthepast.registry.EOTPItems;
 import com.echoesofthepast.util.Tell;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -45,6 +46,12 @@ public class ConversionWheelBlock extends Block implements EntityBlock {
         if (level.isClientSide()) return InteractionResult.SUCCESS;
         if (!(level.getBlockEntity(pos) instanceof ConversionWheelBlockEntity wheel)) return InteractionResult.PASS;
 
+        if (stack.is(EOTPItems.ECHO_ESSENCE.get()) && !Cultivation.knows(player, Discovery.REVERSE_CYCLE)) {
+            stack.shrink(1);
+            Cultivation.teach(player, Discovery.REVERSE_CYCLE);
+            Tell.overlay(player, "eotp.message.wheel_remembers_reverse");
+            return InteractionResult.SUCCESS;
+        }
         if (wheel.acceptCatalyst(stack)) {
             Tell.overlay(player, Component.translatable("eotp.message.catalyst_added", wheel.catalystCharges()));
             return InteractionResult.SUCCESS;

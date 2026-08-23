@@ -4,11 +4,14 @@ import com.echoesofthepast.block.QiDeviceBlockEntity;
 import com.echoesofthepast.cultivation.Cultivation;
 import com.echoesofthepast.cultivation.Discovery;
 import com.echoesofthepast.registry.EOTPBlockEntities;
+import com.echoesofthepast.registry.EOTPItems;
 import com.echoesofthepast.util.Tell;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -46,6 +49,27 @@ public class QiPrismBlock extends Block implements EntityBlock {
     @Override
     public <T extends BlockEntity> @Nullable BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
         return type == EOTPBlockEntities.QI_PRISM.get() ? QiDeviceBlockEntity.ticker() : null;
+    }
+
+    @Override
+    protected InteractionResult useItemOn(
+        ItemStack stack,
+        BlockState state,
+        Level level,
+        BlockPos pos,
+        Player player,
+        InteractionHand hand,
+        BlockHitResult hit
+    ) {
+        if (level.isClientSide()) return InteractionResult.SUCCESS;
+        if (!stack.is(EOTPItems.ECHO_ESSENCE.get()) || Cultivation.knows(player, Discovery.PRISM_FACETS)) {
+            return this.useWithoutItem(state, level, pos, player, hit);
+        }
+
+        stack.shrink(1);
+        Cultivation.teach(player, Discovery.PRISM_FACETS);
+        Tell.overlay(player, "eotp.message.prism_remembers_facets");
+        return InteractionResult.SUCCESS;
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.echoesofthepast.block.formation;
 import com.echoesofthepast.block.QiDeviceBlockEntity;
 import com.echoesofthepast.cultivation.Cultivation;
 import com.echoesofthepast.cultivation.Cultivator;
+import com.echoesofthepast.cultivation.Discovery;
 import com.echoesofthepast.cultivation.Realm;
 import com.echoesofthepast.formation.FormationSurvey;
 import com.echoesofthepast.formation.FormationType;
@@ -140,7 +141,9 @@ public class FormationCoreBlockEntity extends QiDeviceBlockEntity implements QiP
             // The owner is offline: the circuit keeps running on what it was taught, but weakly.
             return true;
         }
-        return cultivator.realm().canRunFormations() && cultivator.knows(type.discovery());
+        boolean realmAllows = cultivator.realm().canRunFormations()
+            || type == FormationType.CULTIVATION && cultivator.realm().atLeast(Realm.BREATH_GATHERING);
+        return realmAllows && cultivator.knows(type.discovery());
     }
 
     private void runEffect(ServerLevel level, FormationType type, FormationSurvey survey) {
@@ -201,18 +204,26 @@ public class FormationCoreBlockEntity extends QiDeviceBlockEntity implements QiP
 
         FormationSurvey current = this.survey;
         if (this.type == null) {
+            if (current.closed()) {
+                Cultivation.teach(player, Discovery.FORMATION_BASICS);
+            }
             Tell.chat(player, Component.translatable("eotp.message.formation_incomplete",
                 current.size(), current.closed() ? 1 : 0));
             return;
         }
 
+        // Understanding comes from constructing and reading a valid circuit. Scrolls can carry the
+        // insight to somebody else, but no generic loot-book is required to invent the formation.
+        Cultivation.teach(player, Discovery.FORMATION_BASICS);
+        Cultivation.teach(player, this.type.discovery());
         Tell.chat(player, Component.translatable("eotp.message.formation_identified",
             Component.translatable(this.type.translationKey()),
             current.size(),
             current.banners(),
             Math.round(this.strength * 100.0F)));
 
-        if (Cultivation.realmOf(player) == Realm.MORTAL) {
+        Realm realm = Cultivation.realmOf(player);
+        if (realm == Realm.MORTAL || this.type != FormationType.CULTIVATION && !realm.canRunFormations()) {
             Tell.chat(player, Component.translatable("eotp.message.formation_ignores_you"));
         }
     }

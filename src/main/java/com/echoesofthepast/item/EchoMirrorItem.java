@@ -3,6 +3,7 @@ package com.echoesofthepast.item;
 import com.echoesofthepast.cultivation.Cultivation;
 import com.echoesofthepast.cultivation.Discovery;
 import com.echoesofthepast.cultivation.Meridian;
+import com.echoesofthepast.cultivation.SpiritProjection;
 import com.echoesofthepast.echo.EchoLog;
 import com.echoesofthepast.qi.QiVisuals;
 import com.echoesofthepast.util.Tell;
@@ -41,6 +42,12 @@ public class EchoMirrorItem extends Item {
         if (level.isClientSide()) return InteractionResult.SUCCESS;
         if (!(player instanceof ServerPlayer serverPlayer) || !(level instanceof ServerLevel serverLevel)) {
             return InteractionResult.PASS;
+        }
+
+        // At Nascent Spirit the mirror stops showing somebody else's past and becomes the polished
+        // threshold through which the cultivator separates their own reflection from the body.
+        if (player.isShiftKeyDown()) {
+            return SpiritProjection.begin(serverPlayer) ? InteractionResult.SUCCESS : InteractionResult.FAIL;
         }
 
         if (!Cultivation.hasOpen(player, Meridian.CROWN)) {

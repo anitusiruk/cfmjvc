@@ -216,17 +216,17 @@ public final class EOTPBlocks {
             () -> BlockBehaviour.Properties.of().mapColor(MapColor.DEEPSLATE).strength(4.5F, 3.0F)
                 .sound(SoundType.DEEPSLATE).requiresCorrectToolForDrops());
 
-    public static final RegistryObject<Block> LOW_SPIRIT_STONE_BLOCK = spiritStoneBlock("low_spirit_stone_block", 4);
-    public static final RegistryObject<Block> MIDDLE_SPIRIT_STONE_BLOCK = spiritStoneBlock("middle_spirit_stone_block", 8);
-    public static final RegistryObject<Block> HIGH_SPIRIT_STONE_BLOCK = spiritStoneBlock("high_spirit_stone_block", 12);
+    public static final RegistryObject<Block> LOW_SPIRIT_STONE_BLOCK = spiritStoneBlock("low_spirit_stone_block", 1, 4);
+    public static final RegistryObject<Block> MIDDLE_SPIRIT_STONE_BLOCK = spiritStoneBlock("middle_spirit_stone_block", 2, 8);
+    public static final RegistryObject<Block> HIGH_SPIRIT_STONE_BLOCK = spiritStoneBlock("high_spirit_stone_block", 4, 12);
 
     /**
      * A stored block of spirit stone. It is a genuine reservoir, and the brightness in its
      * blockstate falls as it is drained, so a wall of these visibly dims when the workshop is
      * running hard.
      */
-    private static RegistryObject<Block> spiritStoneBlock(String name, int light) {
-        return register(name, props -> new SpiritStoneBlock(props, light),
+    private static RegistryObject<Block> spiritStoneBlock(String name, int grade, int light) {
+        return register(name, props -> new SpiritStoneBlock(props, grade),
             () -> BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_LIGHT_BLUE)
                 .strength(2.5F, 4.0F).sound(SoundType.AMETHYST).requiresCorrectToolForDrops()
                 .lightLevel(state -> state.getValue(SpiritStoneBlock.CHARGE) * light / 4));

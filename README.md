@@ -276,9 +276,7 @@ Requires JDK 25 (Minecraft 26.1 needs it).
 
 See [FEATURES.md](FEATURES.md) for the fifty selected features and what each one actually does.
 
-## Intended first hour, roughly
-
-This summary assumes the survival-bootstrap blockers documented in the next section have been fixed.
+## First hour, roughly
 
 1. Mine spirit stone ore, refine raw stone into Low Spirit Stone.
 2. Grind charcoal on an inkstone, dip a brush, and draw a ring of formation ink with a node in it.
@@ -290,63 +288,33 @@ This summary assumes the survival-bootstrap blockers documented in the next sect
 
 ## Complete survival progression and interaction map
 
-### Current survival status
+### Survival status
 
-The following progression is the intended complete route, but the present build is **not yet
-startable in an untouched survival world**. The server boots and every registry object works when
-placed or granted, but several acquisition and progression links are missing. These are code/data
-blockers, not missing textures:
+A fresh survival world can now enter and complete the progression without commands or creative
+items:
 
-1. **Spirit Stone Ore is registered but never placed by world generation.** There is no configured
-   feature, placed feature, or biome modifier for either ore block, so Raw Spirit Stone and Raw Jade
-   have no natural source.
-2. **Spirit Bamboo, Moon Lotus, Earthroot Ginseng, Lingzhi, and Spirit Spring Water have no world
-   placement or loot source.** Their block items are creative-only until a natural spawn, trader, or
-   chest-loot route is added.
-3. **A Mortal cannot earn the first 40 insight.** `CultivationEvents` returns immediately for the
-   Mortal realm, while every implemented insight source is behind that return.
-4. **Every breakthrough requires an active Cultivation Formation, but all formations require
-   Foundation.** This makes Mortal → Breath Gathering and Breath Gathering → Foundation circular.
-5. **Formation discoveries, Reverse Cycle, and advanced Prism Facets have no initial survival
-   source.** Echo Scrolls can teach a stored discovery, but crafted scrolls begin blank and can only
-   copy knowledge somebody already has.
-6. **Placed Spirit Stone Blocks begin with empty `QiStorage`.** Their blockstate initially looks full,
-   then updates to empty; placing refined stone does not transfer stored Qi into the block entity.
-7. **Nascent Spirit Projection has no player input wired to `SpiritProjection.begin`.** Reaching the
-   realm grants the discovery, but there is no item, command, or key that starts projection.
-8. **Spirit Spring Water currently behaves as a hydrating Forge fluid and cleans the Ding.** The
-   promised plant-growth, alchemy-stability, and submerged-cultivation bonuses are not yet connected
-   to its fluid checks.
-9. **Sword armour pieces do not currently reduce technique cost.** The multiplier exists but is not
-   used by Sword Qi or Flying Sword costs; only the full-set projectile interception is active.
-
-Until those links are implemented, the exact fresh-world progression is: **vanilla survival begins,
-but the mod cannot be entered without `/give`, `/setblock`, creative mode, or another mod supplying
-its registered materials**. The stages below define the survival contract the missing links need to
-make real; all downstream recipes and interactions already follow this order.
-
-### Required survival bootstrap
-
-To make the route below genuinely playable, the minimum implementation is:
-
-- generate Spirit Stone Ore in ordinary stone and its deepslate variant at lower levels;
-- place rare Spirit Bamboo patches, Moon Lotus pools, Earthroot Ginseng, Lingzhi, and non-renewable
-  Spirit Spring sources, or put their starters into explicit loot/trade tables;
-- let Mortals gain their first 40 insight from stillness on a Dragon Vein, then use a simple
-  vein-based Breath Gathering ritual that does not require a formation;
-- permit a Breath Gathering cultivator to power a Cultivation Formation for the Foundation attempt,
-  or provide a separate pre-Foundation breakthrough circle;
-- seed at least Formation Basics, Gathering, Cultivation, Reverse Cycle, and Prism Facets through
-  pre-filled Echo Scroll loot or observable discovery actions;
-- initialise placed Spirit Stone Blocks with Qi appropriate to their grade, or provide a direct way
-  to charge them from held stones;
-- bind Nascent Spirit Projection to an item or server-validated input;
-- add explicit Spirit Spring checks to cultivation, plants, and the Ding process.
+- Spirit Stone Ore generates from Y -32 to 80 with stone and deepslate variants.
+- Rare Spirit Bamboo, Moon Lotus, Earthroot Ginseng, and Lingzhi patches generate across the
+  Overworld. Bamboo Shoots and Ginseng Roots place their crop directly, so both are renewable.
+- Rare underground Spirit Springs generate as non-renewable fluid sources.
+- Mortals earn their first 40 insight by meditating on a Dragon Vein and enter Breath Gathering
+  through the Ninefold Returning Breath, which needs no formation.
+- Constructing and inspecting a valid formation teaches its discovery. Breath cultivators may run a
+  Cultivation Formation specifically for the Foundation breakthrough; Foundation still gates every
+  other active formation.
+- Echo Essence teaches a Conversion Wheel to reverse the cycle and reveals advanced Prism facets,
+  keeping discovery inside the memory theme instead of generic chest manuals.
+- Crafted Spirit Stone Blocks begin fully charged with balanced Qi.
+- Sneak-using the Echo Mirror starts or ends Nascent Spirit Projection once the realm is reached.
+- Spirit Spring now accelerates plants and cultivation and is the process ingredient that makes
+  Perfect pills possible.
+- Sword Cultivator armour pieces now apply their intended Flying Sword and Sword Qi cost reduction.
 
 ### Stage 0 — finding the hidden world
 
-1. **Mine naturally generated Spirit Stone Ore.** The intended drop is Raw Spirit Stone; deepslate
-   ore is the deeper, tougher source.
+1. **Mine naturally generated Spirit Stone Ore.** Veins occur between Y -32 and 80 and select the
+   normal or deepslate ore from the surrounding stone. Both drop Raw Spirit Stone; deepslate needs
+   the stronger tool.
 2. **Refine the first material split.** Three Raw Spirit Stones craft one Low Spirit Stone. Smelting
    one Raw Spirit Stone produces Raw Jade, and one Raw Jade grinds into two Jade Dust.
 3. **Craft the Dragon-Vein Compass** from a vanilla compass and Raw Jade. Using it in the air paints
@@ -357,8 +325,10 @@ To make the route below genuinely playable, the minimum implementation is:
    intersection doubles stillness insight and is the ideal long-term cultivation room. Dragon Veins
    are mathematical fields derived from the world seed, so they do not need structures or chunks to
    generate.
-5. **Collect the natural starters:** Spirit Bamboo Shoot, Moon Lotus, Ginseng, Lingzhi, and a limited
-   Spirit Spring source. These open the renewable plant and essence loop.
+5. **Collect the natural starters.** Rare Overworld patches provide Spirit Bamboo, Moon Lotus,
+   Earthroot Ginseng, and Lingzhi. Breaking bamboo yields a plantable Shoot; Ginseng Root replants
+   directly; Moon Lotus and Lingzhi return their block. Underground Spirit Springs are rare and do
+   not form infinite sources, so every bucket matters.
 
 **Interaction chain:** world seed → Dragon Vein strength/phase/flow → ambient Qi and site quality →
 plant growth, personal regeneration, and more efficient workshops.
@@ -468,8 +438,9 @@ projectiles.
 2. **Lay a connected circuit around a Formation Core.** The survey walks horizontal neighbours and
    one-block steps. A circuit is closed only when every mark has at least two connections, so any
    dead end prevents identification.
-3. **Right-click the Core** to bind ownership and inspect the result. The owner must meet the realm
-   and discovery gate; otherwise the valid shape remains inert.
+3. **Right-click the Core** to bind ownership and inspect the result. Reading a valid shape teaches
+   Formation Basics and that exact formation discovery. A Mortal can understand the diagram but not
+   run it. Breath Gathering may run only Cultivation; Foundation permits the complete formation set.
 4. **Feed the Core Qi.** Every active formation drains upkeep once per second. Feeding the preferred
    phase blend increases strength; mismatched Qi weakens it. Banners add vertical reach and up to a
    capped strength bonus.
@@ -492,11 +463,14 @@ Exact circuit recognition:
 
 ### Stage 6 — entering cultivation and opening meridians
 
-After the bootstrap deadlock is repaired, the intended cultivation order is:
+The cultivation order is:
 
-1. **Mortal → Breath Gathering:** earn 40 insight through stillness on a vein, then complete the
-   pre-formation breathing ritual. Breath Gathering gives 60 personal Qi capacity and slow natural
-   regeneration.
+1. **Mortal → Breath Gathering:** earn 40 insight by remaining still where a Dragon Vein has at least
+   15% strength. When ready, crouch without moving on a vein of at least 35% strength to begin the
+   **Ninefold Returning Breath**. Use the compass to read current direction; face downstream for the
+   first breath, upstream for the second, and alternate every two seconds. Moving, standing, or
+   leaving the vein breaks the cadence. Nine aligned breaths open Breath Gathering, fill one quarter
+   of its 60-Qi capacity, and teach Qi Sense.
 2. **Open meridians by doing their work.** Hand requires 100 practice from bound-sword/talisman use;
    Foot requires 100 from leaps, Footwork Seals, and Cloudsteps; Heart requires 140 from surviving
    damage; Crown requires 140 from reading echoes and Qi; Dantian requires 200 and raises personal
@@ -509,7 +483,8 @@ After the bootstrap deadlock is repaired, the intended cultivation order is:
    Heart Demon and calls seven Tribulation bolts halfway through. Golden Core gives 700 base personal
    Qi, persistent storage, and passive artifact support.
 6. **Golden Core → Nascent Spirit:** earn 1,400 insight and survive the hardest demon/tribulation
-   attempt. Nascent Spirit gives 1,800 base Qi and the Projection discovery.
+   attempt. Nascent Spirit gives 1,800 base Qi and the Projection discovery. Sneak-use the Echo Mirror
+   to step out of the body or voluntarily return.
 
 The ritual starts at 60% stability. Good readings combine balanced phase similarity, harmony, Core
 strength, Clear Heart, previous failures, and root conflict. Bad readings remove stability; zero
@@ -551,8 +526,8 @@ blend, technique power, absorption efficiency, and breakthrough risk.
 
 Throw ingredients into the Ding in this exact order, supply the requested Qi blend through its
 network, and control heat from the block below. Lava targets 900 heat, fire 700, ordinary campfire
-620, soul campfire 520, magma 420; Fire Qi can add up to 420 more. Water or Spirit Spring buckets
-clean accumulated residue.
+620, soul campfire 520, magma 420; Fire Qi can add up to 420 more. Water buckets clean accumulated residue. A Spirit Spring bucket is consumed to clean and bless the
+next batch; its 15% process bonus is the final condition required to reach Perfect quality.
 
 Exact recipes and heat windows:
 
@@ -571,8 +546,10 @@ Exact recipes and heat windows:
 - **Breakthrough-Stabilising:** High Spirit Stone → Ginseng Root → Echo Essence → Jade Dust;
   540–820 heat; Earth Qi; yields 1.
 
-Every second of cooking scores heat, phase similarity, calmness, and cleanliness. The average yields
-Cracked below 45%, Ordinary from 45%, Refined from 75%, and Perfect from 93%. Scorching above 1,050
+Every second of cooking scores heat, phase similarity, calmness, cleanliness, and the optional
+Spirit Spring blessing. Ordinary water caps even flawless engineering below Perfect; the rare spring
+provides the final 15%. The average yields Cracked below 45%, Ordinary from 45%, Refined from 75%,
+and Perfect from 93%. Scorching above 1,050
 heat sharply lowers the score. Failed work returns Pill Residue. Repeating the same medicine raises
 per-player tolerance, reducing later doses until tolerance decays.
 
@@ -594,8 +571,9 @@ per-player tolerance, reducing later doses until tolerance decays.
 5. Wear Cloudstep Shoes or take a Cloudstep Pill. At the jump apex, or while falling fast and
    sprinting, spend 6 Qi to kick forward and upward. Shoes give two steps, the potion one, and an open
    Foot Meridian adds one, capped at three.
-6. The full Sword Cultivator set can spend 5 Qi to cancel one indirect hit while a bound sword is
-   held. The full Alchemist set reduces Fire and Magic damage to 60%.
+6. Each Sword Cultivator armour piece reduces Flying Sword and Sword Qi cost by 5%; the full set
+   reduces cost by 30% and can spend 5 Qi to cancel one indirect hit while a bound sword is held. The
+   full Alchemist set reduces Fire and Magic damage to 60%.
 
 **Combat chain:** repeated fighting style → Sword Intent → changed flying-sword behaviour and Sword Qi
 strength; meridian + personal Qi + equipment → whether each technique can fire.
@@ -607,9 +585,9 @@ strength; meridian + personal Qi + equipment → whether each technique can fire
    configured Echo memory time.
 2. With an open Crown Meridian, use the Echo Mirror for 4 personal Qi. It draws each recent event at
    its original position and reports what happened and how many seconds ago.
-3. Craft or find an Echo Scroll. A pre-filled scroll permanently teaches its stored discovery. A
-   blank scroll copies the first discovery its reader already knows, letting knowledge be handed to
-   another player.
+3. Discover formations by constructing and inspecting their complete circuit. Feed Echo Essence to
+   a Conversion Wheel to recover Reverse Cycle knowledge, or to a Prism to reveal its advanced
+   facets. These discoveries can then be copied onto blank Echo Scrolls and handed to another player.
 4. Place an Ancestral Tablet within five blocks of a device and repeat a job. It records relative
    target positions and the actions Strike, Feed, Turn, Stir, or Harvest. When the same sequence has
    repeated three times, it becomes the lesson.

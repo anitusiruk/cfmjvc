@@ -4,6 +4,7 @@ import com.echoesofthepast.EchoesOfThePast;
 import com.echoesofthepast.alchemy.PillKind;
 import com.echoesofthepast.aura.IncenseKind;
 import com.echoesofthepast.item.CarvedSealItem;
+import com.echoesofthepast.item.CultivationPlantItem;
 import com.echoesofthepast.item.DragonVeinCompassItem;
 import com.echoesofthepast.item.EchoMirrorItem;
 import com.echoesofthepast.item.EchoScrollItem;
@@ -69,12 +70,18 @@ public final class EOTPItems {
     public static final RegistryObject<Item> MERIDIAN_THREAD_SPOOL = simple("meridian_thread_spool");
     public static final RegistryObject<Item> TALISMAN_PAPER = simple("talisman_paper");
     public static final RegistryObject<Item> HOLLOW_BAMBOO = simple("hollow_bamboo");
-    public static final RegistryObject<Item> SPIRIT_BAMBOO_SHOOT = simple("spirit_bamboo_shoot");
+    public static final RegistryObject<Item> SPIRIT_BAMBOO_SHOOT = register(
+        "spirit_bamboo_shoot",
+        properties -> new CultivationPlantItem(properties, () -> EOTPBlocks.SPIRIT_BAMBOO.get())
+    );
 
     // -------------------------------------------------------------------------- plants and spoils
 
     public static final RegistryObject<Item> MOON_LOTUS_PETAL = simple("moon_lotus_petal");
-    public static final RegistryObject<Item> GINSENG_ROOT = simple("ginseng_root");
+    public static final RegistryObject<Item> GINSENG_ROOT = register(
+        "ginseng_root",
+        properties -> new CultivationPlantItem(properties, () -> EOTPBlocks.EARTHROOT_GINSENG.get())
+    );
     public static final RegistryObject<Item> LINGZHI_CAP = simple("lingzhi_cap");
     public static final RegistryObject<Item> PURIFIED_LINGZHI = simple("purified_lingzhi");
     public static final RegistryObject<Item> PILL_RESIDUE = simple("pill_residue");

@@ -5,6 +5,7 @@ import com.echoesofthepast.cultivation.Cultivator;
 import com.echoesofthepast.cultivation.Discovery;
 import com.echoesofthepast.cultivation.Meridian;
 import com.echoesofthepast.echo.EchoLog;
+import com.echoesofthepast.item.ArmorSets;
 import com.echoesofthepast.item.FlyingSwordItem;
 import com.echoesofthepast.qi.Phase;
 import com.echoesofthepast.qi.PhaseBlend;
@@ -54,7 +55,7 @@ public final class SwordQi {
             Tell.overlay(player, "eotp.message.hand_meridian_closed");
             return false;
         }
-        if (!Cultivation.spend(player, COST)) return false;
+        if (!Cultivation.spend(player, COST * ArmorSets.techniqueCostMultiplier(player))) return false;
 
         SwordIntentData intent = FlyingSwordItem.intentOf(sword);
         SwordIntent dominant = intent.dominant();

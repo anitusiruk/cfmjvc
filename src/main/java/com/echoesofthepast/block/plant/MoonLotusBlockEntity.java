@@ -1,6 +1,7 @@
 package com.echoesofthepast.block.plant;
 
 import com.echoesofthepast.block.QiDeviceBlockEntity;
+import com.echoesofthepast.fluid.SpiritSpringEffects;
 import com.echoesofthepast.imprint.ImprintAction;
 import com.echoesofthepast.imprint.ImprintTarget;
 import com.echoesofthepast.qi.Phase;
@@ -53,7 +54,8 @@ public class MoonLotusBlockEntity extends QiDeviceBlockEntity implements Imprint
 
         // Moonlight is thin: gathering is slow, and the point of the plant is that it works while
         // you are asleep rather than that it works quickly.
-        float gathered = GATHER_RATE * (1.0F + level.getMoonBrightness(this.worldPosition));
+        float springMultiplier = SpiritSpringEffects.isSpring(level, this.worldPosition.below()) ? 1.5F : 1.0F;
+        float gathered = GATHER_RATE * (1.0F + level.getMoonBrightness(this.worldPosition)) * springMultiplier;
         this.storage.insert(gathered, PhaseBlend.of(Phase.WATER), false);
         this.towardsPetal += gathered;
 
