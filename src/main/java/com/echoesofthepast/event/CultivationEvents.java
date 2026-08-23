@@ -102,6 +102,23 @@ public final class CultivationEvents {
             player.addEffect(EOTPMobEffects.quiet(EOTPMobEffects.SPIRIT_SIGHT, 140, 0));
         }
 
+        // Holding a settled mind is heart work, and so is recovering from a rough patch.
+        if (time % 60L == 0L) {
+            if (player.hasEffect(EOTPMobEffects.holder(EOTPMobEffects.CLEAR_HEART))) {
+                Cultivation.practise(player, Meridian.HEART, 0.4F);
+                Tendencies.note(player, Tendency.PROTECTING, 0.03F);
+            }
+            if (cultivator.coreInstability() > 0 || cultivator.path().hasDiscord()) {
+                Cultivation.practise(player, Meridian.HEART, 0.3F);
+                Tendencies.note(player, Tendency.ENDURING, 0.05F);
+            }
+        }
+
+        // Covering ground is what makes a wandering cultivator, and it is foot work besides.
+        if (time % 100L == 0L && player.getDeltaMovement().horizontalDistanceSqr() > 0.01) {
+            Tendencies.note(player, Tendency.WANDERING, 0.04F);
+        }
+
         if (player.onGround()) {
             cultivator.setCloudstepsUsed(0);
         }
@@ -156,6 +173,7 @@ public final class CultivationEvents {
 
         // Taking a hit and staying upright is how the heart channel opens.
         Cultivation.practise(player, Meridian.HEART, Math.min(4.0F, event.getAmount() * 0.25F));
+        Tendencies.note(player, Tendency.ENDURING, Math.min(0.3F, event.getAmount() * 0.02F));
 
         // Qi in the body cushions the blow a little, spending itself to do it.
         if (cultivator.isUsable(Meridian.HEART, (int) player.level().getGameTime()) && cultivator.qi() > 4.0F) {

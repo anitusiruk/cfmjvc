@@ -4,6 +4,8 @@ import com.echoesofthepast.cultivation.Cultivation;
 import com.echoesofthepast.cultivation.Discovery;
 import com.echoesofthepast.cultivation.Meridian;
 import com.echoesofthepast.cultivation.SpiritProjection;
+import com.echoesofthepast.cultivation.Tendencies;
+import com.echoesofthepast.cultivation.Tendency;
 import com.echoesofthepast.echo.EchoLog;
 import com.echoesofthepast.qi.QiVisuals;
 import com.echoesofthepast.util.Tell;
@@ -76,6 +78,8 @@ public class EchoMirrorItem extends Item {
         serverLevel.playSound(null, player.blockPosition(), SoundEvents.AMETHYST_BLOCK_RESONATE, SoundSource.PLAYERS, 0.8F, 0.7F);
         Cultivation.practise(serverPlayer, Meridian.CROWN, 1.0F);
         Cultivation.teach(serverPlayer, Discovery.QI_SENSE);
+        // Reading the past is the clearest form of observation the mod has.
+        Tendencies.note(serverPlayer, Tendency.OBSERVING, 0.25F);
         return InteractionResult.SUCCESS;
     }
 

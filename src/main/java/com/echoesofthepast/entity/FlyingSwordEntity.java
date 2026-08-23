@@ -149,6 +149,19 @@ public class FlyingSwordEntity extends Entity {
         level.playSound(null, target.blockPosition(), SoundEvents.PLAYER_ATTACK_SWEEP, SoundSource.PLAYERS, 0.8F, 1.4F);
         QiVisuals.bloom(level, target.position().add(0.0, 1.0, 0.0), PhaseBlend.of(Phase.METAL));
 
+        // Revolving Edge: a blade that comes back gives part of its cost back with it.
+        com.echoesofthepast.cultivation.Cultivator cultivator = com.echoesofthepast.cultivation.Cultivation.of(owner);
+        if (cultivator != null
+            && cultivator.path().thesis() == com.echoesofthepast.cultivation.CoreThesis.REVOLVING_EDGE) {
+            cultivator.addQi(3.0F, PhaseBlend.of(Phase.METAL));
+            com.echoesofthepast.cultivation.CultivationStore.touch(owner);
+        }
+        com.echoesofthepast.cultivation.Tendencies.note(
+            (net.minecraft.server.level.ServerPlayer) owner,
+            com.echoesofthepast.cultivation.Tendency.RETURNING,
+            0.1F
+        );
+
         this.cuts++;
         if (this.cuts >= this.maxCuts) {
             this.recall();

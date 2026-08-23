@@ -4,6 +4,9 @@ import com.echoesofthepast.block.formation.FormationCoreBlockEntity;
 import com.echoesofthepast.channel.SealChannels;
 import com.echoesofthepast.cultivation.Cultivation;
 import com.echoesofthepast.cultivation.Discovery;
+import com.echoesofthepast.cultivation.Meridian;
+import com.echoesofthepast.cultivation.Tendencies;
+import com.echoesofthepast.cultivation.Tendency;
 import com.echoesofthepast.formation.FormationSurvey;
 import com.echoesofthepast.formation.FormationType;
 import com.echoesofthepast.qi.QiNet;
@@ -61,6 +64,9 @@ public class DragonVeinCompassItem extends Item {
                 describeDirection(flow),
                 DragonVeins.isIntersection(level, standing) ? 1 : 0));
             Cultivation.teach(serverPlayer, Discovery.QI_SENSE);
+            // Watching Qi phenomena is exactly what the crown channel is for.
+            Cultivation.practise(serverPlayer, Meridian.CROWN, 0.5F);
+            Tendencies.note(serverPlayer, Tendency.OBSERVING, 0.1F);
         }
 
         Tell.chat(player, Cultivation.describe(serverPlayer));
@@ -89,6 +95,12 @@ public class DragonVeinCompassItem extends Item {
         }
 
         if (level.getBlockEntity(pos) instanceof FormationCoreBlockEntity core) {
+            // Inspecting written formations is crown work too.
+            Cultivation.practise(player, Meridian.CROWN, 0.8F);
+            if (player instanceof ServerPlayer serverPlayer) {
+                Tendencies.note(serverPlayer, Tendency.OBSERVING, 0.15F);
+            }
+
             FormationType type = core.type();
             FormationSurvey survey = core.survey();
             Tell.chat(player, type == null

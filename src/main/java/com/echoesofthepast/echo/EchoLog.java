@@ -103,11 +103,22 @@ public final class EchoLog extends SavedData {
         log.setDirty();
     }
 
+    /**
+     * Ordinary events fade, but the moments that made somebody who they are do not: rituals stay in
+     * the world's memory so an Echo Mirror can still find where a Core was formed.
+     */
     private void prune(long now) {
         long cutoff = now - EOTPConfig.echoMemoryTicks();
-        this.echoes.removeIf(echo -> echo.tick() < cutoff);
+        this.echoes.removeIf(echo -> echo.kind() != Kind.RITUAL && echo.tick() < cutoff);
         while (this.echoes.size() > MAX_ENTRIES) {
-            this.echoes.remove(0);
+            int oldest = 0;
+            for (int index = 0; index < this.echoes.size(); index++) {
+                if (this.echoes.get(index).kind() != Kind.RITUAL) {
+                    oldest = index;
+                    break;
+                }
+            }
+            this.echoes.remove(oldest);
         }
     }
 

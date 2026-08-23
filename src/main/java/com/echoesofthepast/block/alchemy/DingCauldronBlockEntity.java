@@ -3,6 +3,7 @@ package com.echoesofthepast.block.alchemy;
 import com.echoesofthepast.alchemy.AlchemyRecipe;
 import com.echoesofthepast.alchemy.PillQuality;
 import com.echoesofthepast.block.QiDeviceBlockEntity;
+import com.echoesofthepast.cultivation.CoreThesis;
 import com.echoesofthepast.cultivation.Cultivation;
 import com.echoesofthepast.cultivation.Discovery;
 import com.echoesofthepast.echo.EchoLog;
@@ -250,8 +251,17 @@ public class DingCauldronBlockEntity extends QiDeviceBlockEntity implements Impr
 
     private void spoil(ServerLevel level) {
         if (!this.added.isEmpty()) {
-            // Failed work is salvageable rather than simply gone.
-            this.eject(level, new ItemStack(EOTPItems.PILL_RESIDUE.get(), Math.max(1, this.added.size() / 2)));
+            // Failed work is salvageable rather than simply gone. A Vermilion Furnace turns the
+            // wasted heat of a botched batch into something living instead.
+            int salvage = Math.max(1, this.added.size() / 2);
+            boolean furnace = level.getEntitiesOfClass(Player.class, new AABB(this.worldPosition).inflate(8.0)).stream()
+                .map(Cultivation::of)
+                .anyMatch(cultivator -> cultivator != null
+                    && cultivator.path().thesis() == CoreThesis.VERMILION_FURNACE);
+            if (furnace) {
+                this.eject(level, new ItemStack(EOTPItems.WOOD_ESSENCE.get(), 1));
+            }
+            this.eject(level, new ItemStack(EOTPItems.PILL_RESIDUE.get(), salvage));
         }
         this.residue = Math.min(2.0F, this.residue + 0.25F);
         this.reset();
