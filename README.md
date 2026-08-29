@@ -685,3 +685,128 @@ plants and machinery into stable relationships → let your own actions form a S
 reconstruct lost principles as Verses → synthesize those principles into a Golden Core → cultivate a
 living Landscape whose history becomes your affinity → survive Heaven attacking the exact weaknesses
 of what you built → teach the workshop to remember and repeat your work.**
+
+## Proposed reduced-scope progression and art plan (design only)
+
+**Status:** This is a recommendation only. It does not replace or delete the complete progression above, and it makes **no gameplay-code change**. It defines a version one artist can finish without losing the mod’s original identity.
+
+### Recommendation: alchemy, written formations, and Inner Landscapes
+
+Keep almost all play grounded: stone, bamboo, ceramic, paper, smoke, water and carefully handled Qi. The **only overt high-xianxia event** should be the Inner Landscape—the player carries a garden’s memory, not a generic elemental class or combat build.
+
+#### Cut from a reduced release
+
+- Classic realm ladder, Meridians, personal Qi combat pool, Cloudstep, Flying Sword, Sword Intent, Sword Qi, armour sets and Footwork progression.
+- Heart Demon, projection, combat-personalised Tribulation, Core Thesis and Verse player upgrades.
+- High Spirit Stone as a mandatory gate; retain it only as optional prestige workshop history.
+
+#### Keep because this is the identity
+
+- Visible Qi, turbulence, flues, reservoirs, Bagua routing, conversion, bells, resonance and Abacus logic.
+- Ding process alchemy, Drying Rack conditions, incense and deterministic quality.
+- Formation grammar: seals, written marks, Core interpretation and named failure clauses.
+- Plants, Spirit Spring, Dragon Veins, Landscape Stele, Echoes, Tablets, Imperial Seals and Paper Cranes.
+
+### Revised reduced-scope progression
+
+**1. Find a place worth tending.** Find Spirit Stone Ore, a Dragon Vein, a rare Spirit Spring and spiritual plants. Cut Raw Spirit Stone with Jade Dust into Low Spirit Stone. The goal is a living workshop, not player combat advancement.
+
+**2. Build the quiet workshop.** Use Low Spirit Stone/Moon Lotus, a Bi Reservoir and Bamboo Flues. Make Inkstone, Brush and Seal-Carving Table. Jade/celadon reduce leakage; lacquer gives the seal workspace its identity.
+
+**3. Write instructions rather than build machines.** Grind ink, carve seals and make Talismans. A formation is a closed statement: Lines/Arcs continue clauses, Nodes separate them, Trigrams add emphasis and phase Ink gives context. The Core names broken clauses. Gathering brings vein Qi to storage, Preservation protects ingredients/drops, Repulsion keeps gardens safe. Flues power the Core; marks never become cables.
+
+**4. Grow ecology.** Moon Lotus makes night Water Qi; Ginseng rewards variety; Lingzhi clears turbulence; the Rack turns sun/moon/smoke into essences. The Ding combines ingredient order, heat and phase-conditioned Qi into workshop medicines—recovery, purification and stabilisation, not combat buffs. Low → Middle → High stone tempering stays optional workshop history.
+
+**5. Make it self-sustaining.** Build an Attunement Formation and Landscape Stele around plants, water, machinery and consumers. It matures after three day/night cycles with three produced phases, a consumer for every phase and no phase monopoly. Imprint it with Echo Essence: the Inner Landscape is the single high-fantasy transition, improving workshop circulation, stability, conversion or plant recovery.
+
+**6. Let the workshop remember.** Mirror recent work, preserve discoveries on Scrolls, and teach Tablets repeated jobs. Imperial Seals name rooms; Paper Cranes move real ingredients. The endgame is a workshop that remembers who cultivated it.
+
+**Reduced loop:** discover a vein → stabilise Qi → write formations → cultivate plants → refine medicines/essences → build balanced ecology → imprint its Inner Landscape → teach the workshop to repeat its work.
+
+### Block-model production priority
+
+**P0 — make first** is a coherent vertical slice. **P1 — complete loop** supports it. **P2 — optional support** can wait. **P3 — decorative/defer** should reuse templates or remain placeholders. One Blockbench pixel is 1/16 block.
+- **P1 — complete loop — Ancestral Tablet:** Echo automation teacher; 10×14×4 tablet on a footed base; two state textures.
+- **P1 — complete loop — Bagua Distributor:** Qi branch router; 16×5×16 octagonal bronze disc, eight trigram wedges and central socket.
+- **P0 — make first — Bamboo Qi Flue:** continuous Qi transport; 16×6×6 hollow bamboo tube along its axis; rotate one model.
+- **P3 — decorative/defer — Black Lacquered Planks:** lacquered workshop decoration; 16×16×16 cube; standard JSON model; one static texture; no Blockbench.
+- **P1 — complete loop — Bronze Spirit Bell:** pulse/resonance reader; 10×14×10 flared hanging bell with loop and clapper.
+- **P3 — decorative/defer — Carved Jade Border:** jade decorative insulation; 16×16×16 cube; standard JSON model; one static texture; no Blockbench.
+- **P3 — decorative/defer — Celadon Basin:** celadon decorative insulation; 14×6×14 shallow glazed bowl.
+- **P3 — decorative/defer — Celadon Bricks:** celadon decorative insulation; 16×16×16 cube; standard JSON model; one static texture; no Blockbench.
+- **P3 — decorative/defer — Celadon Jar:** celadon decorative insulation; 10×14×10 round jar with neck/lid.
+- **P3 — decorative/defer — Celadon Lamp:** celadon decorative insulation; 10×15×10 pierced ceramic lantern.
+- **P3 — decorative/defer — Celadon Pillar:** celadon decorative insulation; 16×16×16 pillar cube with side/end textures; no Blockbench.
+- **P3 — decorative/defer — Celadon Slab:** celadon decorative insulation; vanilla slab template; shared family texture; no Blockbench.
+- **P3 — decorative/defer — Celadon Stairs:** celadon decorative insulation; vanilla stair template; shared family texture; no Blockbench.
+- **P3 — decorative/defer — Celadon Tiles:** celadon decorative insulation; 16×16×16 cube; standard JSON model; one static texture; no Blockbench.
+- **P3 — decorative/defer — Celadon Wall:** celadon decorative insulation; vanilla wall template; reuse Celadon Bricks texture; no Blockbench.
+- **P3 — decorative/defer — Dark Jade Block:** jade decorative insulation; 16×16×16 cube; standard JSON model; one static texture; no Blockbench.
+- **P3 — decorative/defer — Dark Lacquered Planks:** lacquered workshop decoration; 16×16×16 cube; standard JSON model; one static texture; no Blockbench.
+- **P1 — complete loop — Deepslate Spirit Stone Ore:** deep ore source; 16×16×16 cube; standard JSON model; one static texture; no Blockbench.
+- **P0 — make first — Ding Cauldron:** process alchemy vessel; 14×14×14 three-legged bronze Ding with deep mouth and handles.
+- **P1 — complete loop — Earthroot Ginseng:** varied-garden herb; 10×6×10 low leaves with exposed forked root; age textures.
+- **P1 — complete loop — Five Phase Conversion Wheel:** phase converter; 16×16×5 five nested bronze/jade rings.
+- **P2 — optional support — Footwork Seal:** footwork seal; 16×0.25×16 floor decal; no Blockbench.
+- **P0 — make first — Formation Arc Tile:** formation statement mark; 16×1×16 floor tile; shared JSON template, unique top texture; no Blockbench.
+- **P1 — complete loop — Formation Banner:** vertical formation amplifier; 6×32×3 pole with phase-coloured silk; one recolourable model.
+- **P0 — make first — Formation Core:** formation grammar reader; 12×3×12 jade altar-disc with central socket.
+- **P0 — make first — Formation Ink:** phase-coloured written connection; 16×0.25×16 decal; five strokes × phase recolours; no Blockbench.
+- **P0 — make first — Formation Line Tile:** formation statement mark; 16×1×16 floor tile; shared JSON template, unique top texture; no Blockbench.
+- **P0 — make first — Formation Node Tile:** formation statement mark; 16×1×16 floor tile; shared JSON template, unique top texture; no Blockbench.
+- **P0 — make first — Formation Trigram Tile:** formation statement mark; 16×1×16 floor tile; shared JSON template, unique top texture; no Blockbench.
+- **P3 — decorative/defer — Hanging Scroll Flame:** decorative calligraphy scroll; 10×16×1 hanging scroll; one shared paper/roller model, glyph texture changes.
+- **P3 — decorative/defer — Hanging Scroll Gate:** decorative calligraphy scroll; 10×16×1 hanging scroll; one shared paper/roller model, glyph texture changes.
+- **P3 — decorative/defer — Hanging Scroll Mountain:** decorative calligraphy scroll; 10×16×1 hanging scroll; one shared paper/roller model, glyph texture changes.
+- **P3 — decorative/defer — Hanging Scroll Return:** decorative calligraphy scroll; 10×16×1 hanging scroll; one shared paper/roller model, glyph texture changes.
+- **P3 — decorative/defer — Hanging Scroll River:** decorative calligraphy scroll; 10×16×1 hanging scroll; one shared paper/roller model, glyph texture changes.
+- **P3 — decorative/defer — Hanging Scroll Silence:** decorative calligraphy scroll; 10×16×1 hanging scroll; one shared paper/roller model, glyph texture changes.
+- **P3 — decorative/defer — Hanging Scroll Stillness:** decorative calligraphy scroll; 10×16×1 hanging scroll; one shared paper/roller model, glyph texture changes.
+- **P3 — decorative/defer — Hanging Scroll Sword:** decorative calligraphy scroll; 10×16×1 hanging scroll; one shared paper/roller model, glyph texture changes.
+- **P0 — make first — Herb Drying Rack:** environmental herb processor; 16×10×4 bamboo rack with four hanging hooks.
+- **P1 — complete loop — High Spirit Stone Block:** tribulation-history storage; 16×16×16 cube; standard JSON model; one static texture; no Blockbench.
+- **P1 — complete loop — Hollow Bamboo Qi Flue:** cheap lossy tube; 16×6×6 cracked hollow bamboo tube.
+- **P1 — complete loop — Hollow Spirit Bamboo:** hollow spirit bamboo; 6×16×6 split stalk; reuse bamboo geometry.
+- **P1 — complete loop — Incense Censer:** slow workshop aura; 10×11×10 lidded bronze censer, feet, handles and smoke holes.
+- **P0 — make first — Inkstone:** magical ink grinder; 14×3×12 dark slab with grinding slope and ink well.
+- **P1 — complete loop — Jade Abacus:** automation condition controller; 14×10×3 jade frame, rails and bead positions.
+- **P0 — make first — Jade Bi Reservoir:** Qi buffer and Spirit Stone tempering; 14×3×14 jade Bi disc with a real centre hole.
+- **P1 — complete loop — Jade Flue Joint:** low-loss tube turn; 8×8×8 carved jade elbow/socket.
+- **P3 — decorative/defer — Jade Inlay:** jade decorative insulation; 16×16×16 cube; standard JSON model; one static texture; no Blockbench.
+- **P1 — complete loop — Jade Meridian Thread:** logic pulse line; 16×1×16 face-attached line; no Blockbench.
+- **P3 — decorative/defer — Jade Pillar:** jade decorative insulation; 16×16×16 pillar cube with side/end textures; no Blockbench.
+- **P3 — decorative/defer — Jade Slab:** jade decorative insulation; vanilla slab template; shared family texture; no Blockbench.
+- **P3 — decorative/defer — Jade Stairs:** jade decorative insulation; vanilla stair template; shared family texture; no Blockbench.
+- **P3 — decorative/defer — Lacquered Low Table:** lacquered workshop decoration; 16×8×16 low table with curved legs.
+- **P3 — decorative/defer — Lacquered Panel:** lacquered workshop decoration; 16×16×2 inset panel; simple JSON geometry; no Blockbench.
+- **P3 — decorative/defer — Lacquered Pillar:** lacquered workshop decoration; 16×16×16 pillar cube with side/end textures; no Blockbench.
+- **P3 — decorative/defer — Lacquered Screen:** lacquered workshop decoration; 16×16×2 lacquer frame and lattice.
+- **P3 — decorative/defer — Lacquered Slab:** lacquered workshop decoration; vanilla slab template; shared family texture; no Blockbench.
+- **P3 — decorative/defer — Lacquered Stairs:** lacquered workshop decoration; vanilla stair template; shared family texture; no Blockbench.
+- **P0 — make first — Landscape Stele:** Inner Landscape ecology reader; 8×15×8 jade stele with inset landscape panel; mature state.
+- **P1 — complete loop — Lingzhi Spirit Fungus:** turbulence-cleaning fungus; 10×7×10 layered shelf fungus; saturation textures.
+- **P1 — complete loop — Low Spirit Stone Block:** daily Qi storage; 16×16×16 cube; standard JSON model; one static texture; no Blockbench.
+- **P1 — complete loop — Middle Spirit Stone Block:** phase-history storage; 16×16×16 cube; standard JSON model; one static texture; no Blockbench.
+- **P0 — make first — Moon Lotus:** night Water-Qi plant; 12×3×12 floating leaves and opening blossom; state textures.
+- **P3 — decorative/defer — Painted Cloud Screen:** decorative painted screen; 16×16×2 framed screen; reuse Rice Paper Screen geometry, change panel texture.
+- **P3 — decorative/defer — Painted Mountain Screen:** decorative painted screen; 16×16×2 framed screen; reuse Rice Paper Screen geometry, change panel texture.
+- **P3 — decorative/defer — Painted River Screen:** decorative painted screen; 16×16×2 framed screen; reuse Rice Paper Screen geometry, change panel texture.
+- **P3 — decorative/defer — Pale Jade Block:** jade decorative insulation; 16×16×16 cube; standard JSON model; one static texture; no Blockbench.
+- **P0 — make first — Placed Talisman:** face-mounted instruction; 10×10×1 face-attached paper decal; no Blockbench.
+- **P2 — optional support — Qi Prism:** open-air pulse router; 8×8×8 suspended faceted jade crystal.
+- **P3 — decorative/defer — Red Lacquered Planks:** lacquered workshop decoration; 16×16×16 cube; standard JSON model; one static texture; no Blockbench.
+- **P1 — complete loop — Resonance Stone:** tone-gated Qi release; 10×8×10 rounded standing stone with tone groove.
+- **P3 — decorative/defer — Rice Paper Screen:** rice paper screen; 16×16×2 wood lattice and paper; shared screen geometry.
+- **P0 — make first — Seal Carving Table:** seal/talisman workstation; 16×9×16 lacquered bench with chisel, paper and seal recess.
+- **P3 — decorative/defer — Silk Screen:** silk screen; 16×16×2 wood frame and taut silk; shared screen geometry.
+- **P1 — complete loop — Spirit Bamboo:** Qi-grown workshop plant; 6×16×6 segmented stalk/leaves; age textures.
+- **P2 — optional support — Spirit Jade Block:** jade decorative insulation; 16×16×16 cube; standard JSON model; one static texture; no Blockbench.
+- **P3 — decorative/defer — Spirit Spring Water:** spirit spring water; vanilla fluid geometry; still/flow/overlay textures only; no model.
+- **P1 — complete loop — Spirit Stone Ore:** Raw Spirit Stone source; 16×16×16 cube; standard JSON model; one static texture; no Blockbench.
+- **P3 — decorative/defer — White Jade Block:** jade decorative insulation; 16×16×16 cube; standard JSON model; one static texture; no Blockbench.
+
+### Minimum art set for a first playable build
+
+Finish: Ding Cauldron, Inkstone, Seal-Carving Table, Jade Bi Reservoir, Bamboo Flue, Formation Core, one shared Formation Tile template with four top textures, Formation Ink decals, Placed Talisman, Moon Lotus, Spirit Bamboo, Ginseng, Lingzhi, Drying Rack, Censer, Landscape Stele, Low Spirit Stone Block, Spirit Stone Ore, and one each of Celadon/Jade/Lacquer cubes. That is about **18 unique block models plus flat decals and cube templates**, not nearly eighty projects.
+
+Every deferred decorative entry reuses the cube, stair, slab, wall, pillar, screen or scroll template stated in its line. The reduced progression needs no entity renderer, armour layer, flying-sword model, Heart Demon, projection body or combat visual.
