@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "eotp:spirit_bamboo_shoot",
+    "minecraft:gunpowder",
+    "eotp:echo_essence"
+  ],
+  "result": {
+    "id": "eotp:revealing_incense",
+    "count": 3
+  }
+}

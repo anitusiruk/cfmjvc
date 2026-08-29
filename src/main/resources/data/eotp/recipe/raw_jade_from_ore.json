@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "ingredient": "eotp:raw_spirit_stone",
+  "result": {
+    "id": "eotp:raw_jade"
+  },
+  "experience": 0.3,
+  "cookingtime": 200
+}

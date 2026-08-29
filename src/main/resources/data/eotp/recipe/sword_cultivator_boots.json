@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "S": "eotp:spirit_silk",
+    "J": "eotp:raw_jade"
+  },
+  "pattern": [
+    "S S",
+    "J J"
+  ],
+  "result": {
+    "id": "eotp:sword_cultivator_boots"
+  }
+}

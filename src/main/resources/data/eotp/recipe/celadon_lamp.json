@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": "eotp:celadon_bricks",
+    "T": "minecraft:torch"
+  },
+  "pattern": [
+    " C ",
+    "CTC",
+    " C "
+  ],
+  "result": {
+    "id": "eotp:celadon_lamp"
+  }
+}

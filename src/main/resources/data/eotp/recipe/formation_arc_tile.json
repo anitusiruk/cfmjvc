@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "eotp:formation_line_tile",
+    "eotp:jade_dust"
+  ],
+  "result": {
+    "id": "eotp:formation_arc_tile"
+  }
+}

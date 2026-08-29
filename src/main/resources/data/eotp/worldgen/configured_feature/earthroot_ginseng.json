@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:simple_block",
+  "config": {
+    "to_place": {
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "eotp:earthroot_ginseng",
+        "Properties": {
+          "age": "0"
+        }
+      }
+    }
+  }
+}

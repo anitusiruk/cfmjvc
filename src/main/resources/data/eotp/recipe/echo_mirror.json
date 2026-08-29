@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "J": "eotp:raw_jade",
+    "E": "eotp:echo_essence"
+  },
+  "pattern": [
+    "JJJ",
+    "JEJ",
+    "JJJ"
+  ],
+  "result": {
+    "id": "eotp:echo_mirror"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "T": "eotp:meridian_thread_spool"
+  },
+  "pattern": [
+    "TTT"
+  ],
+  "result": {
+    "id": "eotp:jade_meridian_thread",
+    "count": 6
+  }
+}

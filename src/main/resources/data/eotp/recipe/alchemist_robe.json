@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "W": "minecraft:white_wool",
+    "L": "eotp:purified_lingzhi"
+  },
+  "pattern": [
+    "W W",
+    "WLW",
+    "WWW"
+  ],
+  "result": {
+    "id": "eotp:alchemist_robe"
+  }
+}

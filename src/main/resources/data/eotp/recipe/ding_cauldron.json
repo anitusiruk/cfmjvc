@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": "minecraft:copper_ingot",
+    "S": "eotp:middle_spirit_stone"
+  },
+  "pattern": [
+    "C C",
+    "CSC",
+    "C C"
+  ],
+  "result": {
+    "id": "eotp:ding_cauldron"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "J": "eotp:raw_jade",
+    "N": "eotp:formation_node_tile",
+    "S": "eotp:high_spirit_stone"
+  },
+  "pattern": [
+    "JNJ",
+    "NSN",
+    "JNJ"
+  ],
+  "result": {
+    "id": "eotp:formation_core"
+  }
+}

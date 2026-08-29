@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": "minecraft:amethyst_shard",
+    "S": "eotp:low_spirit_stone"
+  },
+  "pattern": [
+    " A ",
+    "ASA",
+    " A "
+  ],
+  "result": {
+    "id": "eotp:resonance_stone",
+    "count": 2
+  }
+}

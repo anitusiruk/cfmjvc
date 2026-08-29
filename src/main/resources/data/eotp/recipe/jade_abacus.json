@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "J": "eotp:raw_jade",
+    "S": "minecraft:stick",
+    "D": "eotp:jade_dust"
+  },
+  "pattern": [
+    "JJJ",
+    "SDS",
+    "JJJ"
+  ],
+  "result": {
+    "id": "eotp:jade_abacus"
+  }
+}

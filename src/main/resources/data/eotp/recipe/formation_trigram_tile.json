@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "eotp:formation_node_tile",
+    "eotp:echo_essence",
+    "eotp:raw_jade"
+  ],
+  "result": {
+    "id": "eotp:formation_trigram_tile"
+  }
+}

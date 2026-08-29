@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "eotp:raw_spirit_stone",
+    "eotp:jade_dust"
+  ],
+  "result": {
+    "id": "eotp:low_spirit_stone"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "J": "eotp:raw_jade",
+    "D": "minecraft:bone_meal"
+  },
+  "pattern": [
+    "JJJ",
+    "JDJ",
+    "JJJ"
+  ],
+  "result": {
+    "id": "eotp:white_jade_block"
+  }
+}

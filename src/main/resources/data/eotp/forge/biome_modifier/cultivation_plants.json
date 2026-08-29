@@ -1,0 +1,11 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#minecraft:is_overworld",
+  "features": [
+    "eotp:spirit_bamboo",
+    "eotp:moon_lotus",
+    "eotp:earthroot_ginseng",
+    "eotp:lingzhi_spirit_fungus"
+  ],
+  "step": "vegetal_decoration"
+}

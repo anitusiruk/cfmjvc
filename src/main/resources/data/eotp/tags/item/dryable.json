@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "eotp:moon_lotus_petal",
+    "eotp:ginseng_root",
+    "eotp:lingzhi_cap",
+    "eotp:spirit_bamboo_shoot",
+    "minecraft:wheat",
+    "minecraft:fern",
+    "minecraft:large_fern"
+  ]
+}

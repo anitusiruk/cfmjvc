@@ -1,0 +1,21 @@
+{
+  "replace": false,
+  "values": [
+    "eotp:white_jade_block",
+    "eotp:pale_jade_block",
+    "eotp:dark_jade_block",
+    "eotp:spirit_jade_block",
+    "eotp:jade_stairs",
+    "eotp:jade_slab",
+    "eotp:jade_pillar",
+    "eotp:carved_jade_border",
+    "eotp:jade_inlay",
+    "eotp:celadon_bricks",
+    "eotp:celadon_tiles",
+    "eotp:celadon_stairs",
+    "eotp:celadon_slab",
+    "eotp:celadon_wall",
+    "eotp:celadon_pillar",
+    "eotp:landscape_stele"
+  ]
+}

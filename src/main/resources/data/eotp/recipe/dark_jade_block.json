@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "J": "eotp:raw_jade",
+    "D": "minecraft:green_dye"
+  },
+  "pattern": [
+    "JJJ",
+    "JDJ",
+    "JJJ"
+  ],
+  "result": {
+    "id": "eotp:dark_jade_block"
+  }
+}

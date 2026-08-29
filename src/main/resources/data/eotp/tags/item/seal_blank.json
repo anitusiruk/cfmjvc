@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:oak_planks",
+    "minecraft:stone",
+    "minecraft:smooth_stone",
+    "minecraft:deepslate",
+    "minecraft:copper_ingot",
+    "minecraft:gold_ingot",
+    "eotp:raw_jade",
+    "eotp:hollow_bamboo"
+  ]
+}

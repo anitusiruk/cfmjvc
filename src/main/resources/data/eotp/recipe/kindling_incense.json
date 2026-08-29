@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "eotp:spirit_bamboo_shoot",
+    "minecraft:gunpowder",
+    "eotp:fire_essence"
+  ],
+  "result": {
+    "id": "eotp:kindling_incense",
+    "count": 3
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": "eotp:spirit_bamboo_shoot",
+    "S": "eotp:spirit_silk"
+  },
+  "pattern": [
+    "BBB",
+    "S S",
+    "BBB"
+  ],
+  "result": {
+    "id": "eotp:herb_drying_rack"
+  }
+}

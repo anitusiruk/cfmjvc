@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": "minecraft:copper_ingot",
+    "J": "eotp:raw_jade",
+    "S": "eotp:high_spirit_stone"
+  },
+  "pattern": [
+    "CJC",
+    "JSJ",
+    "CJC"
+  ],
+  "result": {
+    "id": "eotp:five_phase_conversion_wheel"
+  }
+}

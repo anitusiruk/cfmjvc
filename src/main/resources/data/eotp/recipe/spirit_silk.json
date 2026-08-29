@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:string",
+    "minecraft:string",
+    "minecraft:string",
+    "eotp:jade_dust"
+  ],
+  "result": {
+    "id": "eotp:spirit_silk",
+    "count": 2
+  }
+}

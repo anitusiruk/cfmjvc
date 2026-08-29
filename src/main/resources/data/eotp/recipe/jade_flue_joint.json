@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "J": "eotp:raw_jade",
+    "B": "eotp:spirit_bamboo_shoot"
+  },
+  "pattern": [
+    " J ",
+    "JBJ",
+    " J "
+  ],
+  "result": {
+    "id": "eotp:jade_flue_joint",
+    "count": 2
+  }
+}

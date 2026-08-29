@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:paper",
+    "eotp:spirit_bamboo_shoot"
+  ],
+  "result": {
+    "id": "eotp:talisman_paper",
+    "count": 2
+  }
+}

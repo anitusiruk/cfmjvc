@@ -1,0 +1,14 @@
+{
+  "replace": false,
+  "values": [
+    "eotp:black_lacquered_planks",
+    "eotp:dark_lacquered_planks",
+    "eotp:lacquered_low_table",
+    "eotp:lacquered_panel",
+    "eotp:lacquered_pillar",
+    "eotp:lacquered_screen",
+    "eotp:lacquered_slab",
+    "eotp:lacquered_stairs",
+    "eotp:red_lacquered_planks"
+  ]
+}

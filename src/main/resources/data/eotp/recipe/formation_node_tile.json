@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "eotp:formation_line_tile",
+    "eotp:low_spirit_stone"
+  ],
+  "result": {
+    "id": "eotp:formation_node_tile"
+  }
+}
